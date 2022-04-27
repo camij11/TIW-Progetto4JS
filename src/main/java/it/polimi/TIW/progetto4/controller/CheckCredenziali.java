@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -60,7 +61,7 @@ public class CheckCredenziali extends HttpServlet {
 		
 		try {
 			username = request.getParameter("username");
-			password = request.getParameter("pwd");
+			password = request.getParameter("password");
 			
 			if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
 				throw new Exception("Missing or empty credential value");
@@ -78,13 +79,24 @@ public class CheckCredenziali extends HttpServlet {
 		
 		DAO_Utente DaoUtente = new DAO_Utente(connection);
 		Utente utente = null;
-		/*try {
+		try {
 			utente = DaoUtente.checkCredenziali(username, password);
 		} catch (SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not Possible to check credentials");
 			return;
 		}
-		*/
-
+		String percorso;
+		if(utente!= null) {
+			request.getSession().setAttribute("user", utente);
+			percorso = getServletContext().getContextPath() + "/GoToHomePage";
+			response.sendRedirect(percorso);
+		} 
+		else {
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("errorMsg", "Incorrect username or password");
+			percorso = "/index.html";
+			templateEngine.process(percorso, ctx, response.getWriter());
+		}
 	}
 }
