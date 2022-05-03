@@ -33,4 +33,36 @@ public class DAO_Utente {
 		}
 	}
 	
+	public String checkUsername(String name, String surname, String username, String password) throws SQLException {
+		String query = "SELECT username FROM Utente WHERE username = ?";
+		try(PreparedStatement statement = connessione.prepareStatement(query);) {
+			statement.setString(1, username);
+		try(ResultSet result = statement.executeQuery();) {
+			if(result.next()) {
+					return username;
+				} else { 
+					return null;
+				}
+				     }
+			      }
+		}
+	
+	public Utente registraUtente(String username,String password,String name,String surname) throws SQLException {
+		String query = "INSERT INTO Utente VALUES(?,?,?,?)";
+		try(PreparedStatement statement = connessione.prepareStatement(query);) {
+			statement.setString(1, username);
+			statement.setString(2, password);
+			statement.setString(3, name);
+			statement.setString(4, surname);
+			if(statement.executeUpdate() == 1) {	
+			    Utente utente = new Utente();
+				utente.setNome(name);
+			    utente.setCognome(surname);
+				utente.setPassword(password);
+				utente.setUsername(username);
+				return utente;
+			} else return null;
+		}
+	}
 }
+	

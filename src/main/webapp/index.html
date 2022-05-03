@@ -5,12 +5,17 @@
 <title>Banca TIW: accedi o iscriviti</title>
 </head>
 <body>
+<p th:text=" ${successMsg}"></p>
 	<h2>Benvenuto nella pagina di login di TIW banca</h2>
 	<form action="CheckCredenziali" method="post">
 	   Username: <input type="text" name="username" required/> <br>
 	   Password: <input type="password" name="password" required/> <br>
 	   <input type="submit" value="accedi"/>
 	   <p th:text=" ${errorMsg}"></p>
+ 	</form>
+ 	<form action="GoToRegisterPage" method="post">
+ 	Sei un nuovo utente? <input type="submit" value="registrati qui"/>
+ 	<p th:text=" ${errorMsg}"></p>
  	</form>
 </body>
 </html>

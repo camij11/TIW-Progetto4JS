@@ -20,6 +20,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import it.polimi.TIW.progetto4.beans.*;
 import it.polimi.TIW.progetto4.DAO.*;
 import it.polimi.TIW.progetto4.util.*;
+import it.polimi.TIW.progetto4.util.ConnectionHandler;
 
 /**
  * Servlet implementation class CheckCredenziali
@@ -97,6 +98,14 @@ public class CheckCredenziali extends HttpServlet {
 			ctx.setVariable("errorMsg", "Incorrect username or password");
 			percorso = "/index.html";
 			templateEngine.process(percorso, ctx, response.getWriter());
+		}
+	}
+	
+	public void destroy() {
+		try {
+			ConnectionHandler.closeConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }
