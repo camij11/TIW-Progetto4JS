@@ -22,9 +22,6 @@ import it.polimi.TIW.progetto4.DAO.*;
 import it.polimi.TIW.progetto4.util.*;
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
 
-/**
- * Servlet implementation class CheckCredenziali
- */
 @WebServlet("/CheckCredenziali")
 public class CheckCredenziali extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -48,7 +45,6 @@ public class CheckCredenziali extends HttpServlet {
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
 	}
-
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

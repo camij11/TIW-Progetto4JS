@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>HomePage Banca</title>
 </head>
-<body>
-
+<body> 
+<h2> Elenco Conti</h2>
+<p th:text=" ${NessunConto}"></p>
+<table>
+<tr th:each=" conto: ${ListaConti}">
+<td> ID conto: </td>
+<td th:text="${conto}" />
+</tr>
+</table>
 </body>
 </html>

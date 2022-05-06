@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DAO_Conto {
 	private Connection connessione;
@@ -52,4 +54,18 @@ public class DAO_Conto {
 		}
 	}
 	
+	public List<Integer> getContiUtente(String username) throws SQLException {
+		String query = "SELECT IDConto FROM Conto WHERE Intestatario = ?";
+		List<Integer> ElencoConti = new ArrayList<>();
+		try(PreparedStatement statement = connessione.prepareStatement(query);) {
+			statement.setString(1, username);
+			try(ResultSet result = statement.executeQuery();) {
+				while (result.next()) {
+					  int conto = result.getInt("IDConto");
+					  ElencoConti.add(conto);
+			    }
+		    }
+		return ElencoConti;
+	    }
+	}
 }
