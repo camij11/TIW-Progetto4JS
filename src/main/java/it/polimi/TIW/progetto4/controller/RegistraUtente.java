@@ -16,6 +16,7 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import it.polimi.TIW.progetto4.DAO.DAO_Conto;
 import it.polimi.TIW.progetto4.DAO.DAO_Utente;
 import it.polimi.TIW.progetto4.beans.Utente;
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
@@ -90,6 +91,7 @@ public class RegistraUtente extends HttpServlet {
 	  }	
 	
 	DAO_Utente DaoUtente = new DAO_Utente(connection);
+	DAO_Conto DaoConto = new DAO_Conto(connection);
 	Utente utente = null;
 	String usernameEsistente = null;
 	try{
@@ -106,12 +108,22 @@ public class RegistraUtente extends HttpServlet {
 	}
 	
 	String percorso;
+	int result;
+	
 	if(utente!= null) {
-		String path = "/index.html";
-		ServletContext servletContext = getServletContext();
-		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-		ctx.setVariable("successMsg","Registrazione avvenuta con successo");
-		templateEngine.process(path, ctx, response.getWriter());
+		try {
+			result = DaoConto.addContoDefault(utente.getUsername());
+		} catch(Exception e) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Non è stato possibile aggiungere un conto di default");
+		    return;
+		}
+		if(result == 1) {
+			String path = "/index.html";
+			ServletContext servletContext = getServletContext();
+			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+			ctx.setVariable("successMsg","Registrazione avvenuta con successo");
+			templateEngine.process(path, ctx, response.getWriter());
+		}
 	} 
 	else {
 		ServletContext servletContext = getServletContext();

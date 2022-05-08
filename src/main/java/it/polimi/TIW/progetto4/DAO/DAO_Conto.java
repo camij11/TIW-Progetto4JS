@@ -1,5 +1,6 @@
 package it.polimi.TIW.progetto4.DAO;
 import it.polimi.TIW.progetto4.beans.Conto;
+import it.polimi.TIW.progetto4.beans.Utente;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,6 +33,14 @@ public class DAO_Conto {
 					return null;
 				}
 			}
+		}
+	}
+	
+	public int addContoDefault(String username) throws SQLException {
+		String query = "INSERT into Conto(Saldo,Intestatario) VALUES('0',?)";
+		try(PreparedStatement statement = connessione.prepareStatement(query);) {
+			statement.setString(1, username);
+			return statement.executeUpdate();
 		}
 	}
 	

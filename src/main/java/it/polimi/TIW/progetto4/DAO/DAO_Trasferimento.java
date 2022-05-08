@@ -18,68 +18,26 @@ public class DAO_Trasferimento {
 		this.connessione = connessione;
 	}
 	
-	public ArrayList<Trasferimento> trovaTrasferimentiByIDContoOrigine(int IDContoOrigine) throws SQLException{
+	public ArrayList<Trasferimento> trovaTrasferimentiByIDConto(int IDConto) throws SQLException{
 		ArrayList<Trasferimento> risultato = new ArrayList<Trasferimento>();
 		
-		String query = "SELECT * FROM Trasferimento WHERE IDContoOrigine = ?";
+		String query = "SELECT * FROM Trasferimento WHERE IDContoOrigine = ? or IDContoDestinazione = ? ORDER BY Data DESC";
 		ResultSet result = null;
 		PreparedStatement statement = null;
 		try {
 			statement = connessione.prepareStatement(query);
-			statement.setInt(1, IDContoOrigine);
+			statement.setInt(1, IDConto);
+			statement.setInt(2, IDConto);
 			result = statement.executeQuery();
 			
 			while (result.next()) {
 				Trasferimento t = new Trasferimento();
-				t.setIDtrasferimento(result.getInt("IDTrasferimento"));
+				t.setIDTrasferimento(result.getInt("IDTrasferimento"));
 				t.setData(result.getDate("Data"));
 				t.setImporto(result.getInt("Importo"));
+				t.setCausale(result.getString("Causale"));
 				t.setIDContoOrigine(result.getInt("IDContoOrigine"));
-				t.setIDtrasferimento(result.getInt("IDContoTrasferimento"));
-				
-				risultato.add(t);
-			}
-		} catch (SQLException e) {
-			throw e;
-
-		} finally {
-			try {
-				if (result != null) {
-					result.close();
-				}
-			} catch (SQLException e1) {
-				throw e1;
-			}
-			try {
-				if (statement != null) {
-					statement.close();
-				}
-			} catch (SQLException e2) {
-				throw e2;
-			}
-		}
-
-		return risultato;
-	}
-	
-	public ArrayList<Trasferimento> trovaTrasferimentiByIDContoDestinazione(int IDContoDestinazione) throws SQLException{
-		ArrayList<Trasferimento> risultato = new ArrayList<Trasferimento>();
-		
-		String query = "SELECT * FROM Trasferimento WHERE IDContoDestinazione = ?";
-		ResultSet result = null;
-		PreparedStatement statement = null;
-		try {
-			statement = connessione.prepareStatement(query);
-			statement.setInt(1, IDContoDestinazione);
-			result = statement.executeQuery();
-			
-			while (result.next()) {
-				Trasferimento t = new Trasferimento();
-				t.setIDtrasferimento(result.getInt("IDTrasferimento"));
-				t.setData(result.getDate("Data"));
-				t.setImporto(result.getInt("Importo"));
-				t.setIDContoOrigine(result.getInt("IDContoOrigine"));
-				t.setIDtrasferimento(result.getInt("IDContoTrasferimento"));
+				t.setIDContoDestinazione(result.getInt("IDContoDestinazione"));
 				
 				risultato.add(t);
 			}

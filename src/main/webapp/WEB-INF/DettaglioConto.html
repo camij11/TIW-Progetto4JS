@@ -7,9 +7,39 @@
 <body>
 	<div>
 		<h3>Dettagli del conto:</h3>
+		<table border="1" style="border-collapse:collapse" >
+			<tr>
+			<td>IDConto</td>
+			<td>Intestatario</td>
+			<td>Saldo</td>
+			</tr>
+			<tr>
+			<td> <p th:text="${DettaglioConto.IDConto}"></p> </td>
+			<td> <p th:text="${DettaglioConto.proprietario}"></p> </td>
+			<td> <p th:text="${DettaglioConto.saldo}"></p> </td>
+			</tr>
+		</table>
 	</div>
 	<div>
 		<h3>Lista delle ultime transazioni:</h3>
+		<table border="1" style="border-collapse:collapse" >
+			<tr>
+			<td>IDTrasferimento</td>
+			<td>Data</td>
+			<td>Importo</td>
+			<td>Causale</td>
+			<td>IDContoOrigine</td>
+			<td>IDContoDestinazione</td>
+			</tr>
+			<tr th:each=" trasferimento: ${Trasferimenti}" >
+            <td> <p th:text="${trasferimento.IDTrasferimento}"></p></td>
+            <td> <p th:text="${trasferimento.Data}"></p></td>
+			<td> <p th:text="${trasferimento.Importo}"></p></td>
+			<td> <p th:text="${trasferimento.Causale}"></p></td>
+			<td> <p th:text="${trasferimento.IDContoOrigine}"></p></td>
+			<td> <p th:text="${trasferimento.IDContoDestinazione}"></p></td>
+            </tr>
+         </table>
 	</div>
 	<div>
 		<h3>Vuoi ordinare un nuovo trasferimento?</h3>

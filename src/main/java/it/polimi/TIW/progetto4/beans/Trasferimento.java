@@ -3,16 +3,23 @@ package it.polimi.TIW.progetto4.beans;
 import java.util.Date;
 
 public class Trasferimento {
-	private int IDtrasferimento;
+	private int IDTrasferimento;
 	private Date data;
 	private int importo;
 	private int IDContoOrigine;
 	private int IDContoDestinazione;
-	public int getIDtrasferimento() {
-		return IDtrasferimento;
+	private String causale;
+	public String getCausale() {
+		return causale;
 	}
-	public void setIDtrasferimento(int iDtrasferimento) {
-		IDtrasferimento = iDtrasferimento;
+	public void setCausale(String causale) {
+		this.causale = causale;
+	}
+	public int getIDTrasferimento() {
+		return IDTrasferimento;
+	}
+	public void setIDTrasferimento(int IDTrasferimento) {
+		IDTrasferimento = IDTrasferimento;
 	}
 	public Date getData() {
 		return data;

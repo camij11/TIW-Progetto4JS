@@ -12,10 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import it.polimi.TIW.progetto4.DAO.DAO_Conto;
+import it.polimi.TIW.progetto4.DAO.DAO_Trasferimento;
+import it.polimi.TIW.progetto4.beans.Conto;
+import it.polimi.TIW.progetto4.beans.Trasferimento;
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
+
+import java.util.ArrayList;
 
 /**
  * Servlet implementation class SelezionaConto
@@ -41,7 +48,40 @@ public class SelezionaConto extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(request.getParameter("conto"));
+		int IDConto = 0;
+		DAO_Conto DaoConto = new DAO_Conto(connection);
+		DAO_Trasferimento DaoTrasferimento = new DAO_Trasferimento(connection);
+		Conto conto;
+		try{
+			IDConto = Integer.parseInt(request.getParameter("conto"));
+		} catch(Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Nessun conto selezionato");
+			return;
+		}
+		
+		try{
+			conto = DaoConto.getContoByID(IDConto);
+		} catch(Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile selezionare conto desiderato");
+			return;
+		}
+		
+		ArrayList<Trasferimento> listaTrasferimenti = new ArrayList<>();
+		
+		try {
+			listaTrasferimenti = DaoTrasferimento.trovaTrasferimentiByIDConto(IDConto);
+		} catch(Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile selezionare conto desiderato");
+			return;
+		}
+		
+		String percorso = "/WEB-INF/DettaglioConto.html";
+		ServletContext servletContext = getServletContext();
+		final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+		ctx.setVariable("DettaglioConto", conto);
+		ctx.setVariable("Trasferimenti", listaTrasferimenti);
+		templateEngine.process(percorso, ctx, response.getWriter());
+		
 	}
 	
 	public void destroy() {

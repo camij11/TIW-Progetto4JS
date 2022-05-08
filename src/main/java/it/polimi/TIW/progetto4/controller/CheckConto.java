@@ -52,14 +52,14 @@ public class CheckConto extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String usernameDestinatario;
-		int IDContoDestinatario;
+		int IDContoDestinazione;
 		String causale;
 		int importo;
 		int IDContoOrigine;
 		
 		try {
 			usernameDestinatario = request.getParameter("usernameDestinatario");
-			IDContoDestinatario = Integer.parseInt(request.getParameter("IDContoDestinatario"));
+			IDContoDestinazione = Integer.parseInt(request.getParameter("IDContoDestinazione"));
 			causale = request.getParameter("causale");
 			importo = Integer.parseInt(request.getParameter("importo"));
 			IDContoOrigine = Integer.parseInt(request.getParameter("IDContoOrigine"));
@@ -76,7 +76,7 @@ public class CheckConto extends HttpServlet {
 				throw new Exception("Importo nullo o negativo");
 			}
 			
-			if (IDContoOrigine == IDContoDestinatario) {
+			if (IDContoOrigine == IDContoDestinazione) {
 				throw new Exception("Conto di origine uguale a conto di destinazione");
 			}
 			
@@ -91,7 +91,7 @@ public class CheckConto extends HttpServlet {
 		Conto contoDestinazione = null;
 		Conto contoOrigine = null;
 		try {
-			contoDestinazione = DAOConto.checkProprietà(IDContoDestinatario, usernameDestinatario);
+			contoDestinazione = DAOConto.checkProprietà(IDContoDestinazione, usernameDestinatario);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile controllare la proprietà del conto");
