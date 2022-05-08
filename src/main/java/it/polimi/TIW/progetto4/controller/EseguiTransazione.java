@@ -18,6 +18,8 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
 import it.polimi.TIW.progetto4.DAO.DAO_Trasferimento;
+import it.polimi.TIW.progetto4.DAO.DAO_Conto;
+import it.polimi.TIW.progetto4.beans.Conto;
 
 /**
  * Servlet implementation class EseguiTransazione
@@ -60,9 +62,19 @@ public class EseguiTransazione extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		DAO_Trasferimento DAOTrasferimento = new DAO_Trasferimento(connection);
+		DAO_Conto DAOConto = new DAO_Conto(connection);
+		Conto contoOriginePrima, contoOrigineDopo, contoDestinazionePrima, contoDestinazioneDopo;
 		int risultato = 0;
 		int IDContoOrigine = Integer.parseInt(request.getParameter("IDContoOrigine"));
 		int IDContoDestinazione = Integer.parseInt(request.getParameter("IDContoDestinazione"));
+		try {
+			contoOriginePrima = DAOConto.getContoByID(IDContoOrigine);
+			contoDestinazionePrima = DAOConto.getContoByID(IDContoDestinazione);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile estrarre i conti prima della transazione");
+			return;
+		}
 		int importo = Integer.parseInt(request.getParameter("importo"));
 		String causale = request.getParameter("causale");
 		try {
@@ -78,11 +90,24 @@ public class EseguiTransazione extends HttpServlet {
 			return;
 		}
 		
+		try {
+			contoOrigineDopo = DAOConto.getContoByID(IDContoOrigine);
+			contoDestinazioneDopo = DAOConto.getContoByID(IDContoDestinazione);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile estrarre i conti dopo la transazione");
+			return;
+		}
+		
 		String percorso;
 		if(risultato == 1) {
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			ctx.setVariable("errorMsg", "Tutto ok");
+			ctx.setVariable("ContoOriginePrima", contoOriginePrima);
+			ctx.setVariable("ContoOrigineDopo", contoOrigineDopo);
+			ctx.setVariable("ContoDestinazionePrima", contoDestinazionePrima);
+			ctx.setVariable("ContoDestinazioneDopo", contoDestinazioneDopo);
 			percorso = "/WEB-INF/successo.html";
 			templateEngine.process(percorso, ctx, response.getWriter());
 		} 

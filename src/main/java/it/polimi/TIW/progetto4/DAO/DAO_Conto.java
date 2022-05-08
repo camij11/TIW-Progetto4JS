@@ -68,4 +68,32 @@ public class DAO_Conto {
 		return ElencoConti;
 	    }
 	}
+	
+	public Conto getContoByID(int IDConto) throws SQLException {
+		String query = "SELECT IDConto, Saldo, Intestatario FROM Conto WHERE IDConto = ?";
+		Conto conto = new Conto();
+		try(PreparedStatement statement = connessione.prepareStatement(query);){
+			statement.setInt(1, IDConto);
+			try(ResultSet result = statement.executeQuery();){
+				while (result.next()) {
+					  conto.setIDConto(result.getInt("IDConto"));
+					  conto.setSaldo(result.getInt("Saldo"));
+					  conto.setProprietario(result.getString("Intestatario"));
+			    }
+			}
+		}
+		return conto;
+	}
+	
+	public void updateConto(Conto conto) throws SQLException {
+		String query = "UPDATE Conto SET Saldo = ? WHERE IDConto = ?";
+		int risultato = 0;
+		try(PreparedStatement statement = connessione.prepareStatement(query);){
+			statement.setInt(1,conto.getSaldo());
+			statement.setInt(2, conto.getIDConto());
+			risultato = statement.executeUpdate();
+		}
+		if(risultato == 1) System.out.println("UpdateConto OK");
+		else System.out.println("UpdateConto KO");
+	}
 }

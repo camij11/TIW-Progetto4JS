@@ -123,17 +123,16 @@ public class DAO_Trasferimento {
 			statement.setInt(5, IDContoDestinazione);
 			
 			risultato = statement.executeUpdate();
-			/* Aggiorno il conto di origine togliendo l'importo e mi salvo il saldo precedente
+			
 			Conto ContoOrigine = DAOConto.getContoByID(IDContoOrigine);
 			int importoOriginePrima = ContoOrigine.getSaldo();
 			ContoOrigine.setSaldo(importoOriginePrima - importo);
-			DAOConto.updateConto(ContoOrigine); */
+			DAOConto.updateConto(ContoOrigine);
 			
-			/* Aggiorno il conto di destinazione aggiungendo l'importo e mi salvo il saldo precedente
 			Conto ContoDestinazione = DAOConto.getContoByID(IDContoDestinazione);
-			int importoDestinazioneDopo ContoDestinazione.getSaldo();
+			int importoDestinazioneDopo = ContoDestinazione.getSaldo();
 			ContoDestinazione.setSaldo(importoDestinazioneDopo + importo);
-			DAOConto.updateConto(ContoDestinazione); */
+			DAOConto.updateConto(ContoDestinazione);
 			
 			connessione.commit();
 			
