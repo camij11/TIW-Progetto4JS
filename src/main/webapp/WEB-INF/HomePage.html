@@ -7,11 +7,18 @@
 <body> 
 <h2> Elenco Conti</h2>
 <p th:text=" ${NessunConto}"></p>
-<table>
-<tr th:each=" conto: ${ListaConti}">
+
+<form action="SelezionaConto" method="post">
+<select name="conto" size="${ListaConti}.size" multiple>
+<tr th:each=" conto: ${ListaConti}" >
+<option th:value="${conto}" >
 <td> ID conto: </td>
-<td th:text="${conto}" />
+<td th:text="${conto}"/>
+</option>
 </tr>
-</table>
+</select>
+<input type= "submit" value= "Visualizza dettagli conto selezionato" >
+</form>
+
 </body>
 </html>
