@@ -24,5 +24,14 @@
 	<p th:text=" ${ContoDestinazioneDopo.IDConto}"></p>
 	<p th:text=" ${ContoDestinazioneDopo.saldo}"></p>
 	<p th:text=" ${ContoDestinazioneDopo.proprietario}"></p>
+	
+	<div>
+		<p><a href="/TIW-Progetto4/Logout">Logout</a></p>
+		<p><a href="/TIW-Progetto4/GoToHomePage">Home Page</a></p>
+		<form action="SelezionaConto" method="post">
+			<input type="hidden" th:value="${ContoOrigineDopo.IDConto}" name="conto"/>
+			<input type="submit" value="Ritorna alla pagina precedente" />
+		</form>
+	</div>
 </body>
 </html>

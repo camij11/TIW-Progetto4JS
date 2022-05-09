@@ -48,10 +48,14 @@
 	   		IDConto del destinatario: <input type="number" name="IDContoDestinazione" required/> <br>
 	   		Causale: <input type="text" name="causale" required/> <br>
 	   		Importo: <input type="number" name="importo" required/> <br>
-	   		<input type="hidden" name="IDContoOrigine" value="2"/>
+	   		<input type="hidden" name="IDContoOrigine" th:value="${DettaglioConto.IDConto}"/>
 	   		<input type="submit" value="Invia"/>
 	   		<p th:text=" ${errorMsg}"></p>
  		</form>
+	</div>
+	<div>
+		<p><a href="/TIW-Progetto4/Logout">Logout</a></p>
+		<p><a href="/TIW-Progetto4/GoToHomePage">Ritorna alla pagina precedente</a></p>
 	</div>
 </body>
 </html>

@@ -114,7 +114,8 @@ public class CheckConto extends HttpServlet {
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			ctx.setVariable("errorMsg", "Conto di origine o conto di destinazione inesistente oppure importo maggiore del saldo del conto d'origine");
-			percorso = "/WEB-INF/fallimento.html";
+			ctx.setVariable("IDConto", IDContoOrigine);
+			percorso = "/WEB-INF/Fallimento.html";
 			templateEngine.process(percorso, ctx, response.getWriter());
 		}
 	}

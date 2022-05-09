@@ -10,15 +10,13 @@
 
 <form action="SelezionaConto" method="post">
 <select name="conto" size="${ListaConti}.size" multiple>
-<tr th:each=" conto: ${ListaConti}" >
-<option th:value="${conto}" >
-<td> ID conto: </td>
-<td th:text="${conto}"/>
+<option th:each=" conto: ${ListaConti}" th:value="${conto}" th:label="'IDConto: '+ ${conto}" >
 </option>
-</tr>
 </select>
 <input type= "submit" value= "Visualizza dettagli conto selezionato" >
 </form>
-
+<div>
+<p><a href="/TIW-Progetto4/Logout">Logout</a></p>
+</div>
 </body>
 </html>

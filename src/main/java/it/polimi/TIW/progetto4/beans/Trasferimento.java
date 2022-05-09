@@ -19,7 +19,7 @@ public class Trasferimento {
 		return IDTrasferimento;
 	}
 	public void setIDTrasferimento(int IDTrasferimento) {
-		IDTrasferimento = IDTrasferimento;
+		this.IDTrasferimento = IDTrasferimento;
 	}
 	public Date getData() {
 		return data;

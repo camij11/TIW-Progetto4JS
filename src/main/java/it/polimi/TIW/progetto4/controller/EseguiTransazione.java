@@ -108,14 +108,14 @@ public class EseguiTransazione extends HttpServlet {
 			ctx.setVariable("ContoOrigineDopo", contoOrigineDopo);
 			ctx.setVariable("ContoDestinazionePrima", contoDestinazionePrima);
 			ctx.setVariable("ContoDestinazioneDopo", contoDestinazioneDopo);
-			percorso = "/WEB-INF/successo.html";
+			percorso = "/WEB-INF/Successo.html";
 			templateEngine.process(percorso, ctx, response.getWriter());
 		} 
 		else {
 			ServletContext servletContext = getServletContext();
 			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
 			ctx.setVariable("errorMsg", "Nope");
-			percorso = "/WEB-INF/fallimento.html";
+			percorso = "/WEB-INF/Fallimento.html";
 			templateEngine.process(percorso, ctx, response.getWriter());
 		}
 	}
