@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>HomePage Banca</title>
+</head>
+<body> 
+<h2> Elenco Conti</h2>
+<p th:text=" ${NessunConto}"></p>
+
+<form action="SelezionaConto" method="post">
+<select name="conto" size="${ListaConti}.size" multiple>
+<option th:each=" conto: ${ListaConti}" th:value="${conto}" th:label="'IDConto: '+ ${conto}" >
+</option>
+</select>
+<input type= "submit" value= "Visualizza dettagli conto selezionato" >
+</form>
+<p th:text=" ${ErrorMsg}"></p>
+<div>
+<p><a href="/TIW-Progetto4/Logout">Logout</a></p>
+</div>
+</body>
+</html>
