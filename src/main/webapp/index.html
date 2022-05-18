@@ -2,20 +2,40 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Banca TIW: accedi o iscriviti</title>
+<title>Banca TIW: accedi o registrati</title>
+<script src="login.js" defer>
+</script>
+<script src="utils.js" defer>
+</script>
 </head>
 <body>
-<p th:text=" ${successMsg}"></p>
-	<h2>Benvenuto nella pagina di login di TIW banca</h2>
-	<form action="CheckCredenziali" method="post">
-	   Username: <input type="text" name="username" required/> <br>
-	   Password: <input type="password" name="password" required/> <br>
-	   <input type="submit" value="accedi"/>
-	   <p th:text=" ${errorMsg}"></p>
- 	</form>
- 	<form action="GoToRegisterPage" method="post">
- 	Sei un nuovo utente? <input type="submit" value="registrati qui"/>
- 	<p th:text=" ${errorMsg}"></p>
- 	</form>
+<div id = "successmessage">
+ 	</div>
+    <div id = "logindiv">
+		<h2>Benvenuto nella pagina di login di TIW banca</h2>
+		<form id = "loginform" action = "#">
+		<fieldset>
+		   Username: <input type="email" name="username" required/> <br>
+		   Password: <input type="password" name="password" required/> <br>
+		   <input id = "loginbutton"  type="button" value="accedi"/>
+		</fieldset>
+	 	</form>
+ 	</div>
+ 	<div id = registerdiv>
+		<h2>Benvenuto nella pagina di registrazione</h2>
+		<form id = "registerform" action = "#">
+		<fieldset>
+		   Nome: <input type="text" name="name" required/> <br>
+		   Cognome: <input type="text" name="surname" required/> <br>
+		   Username: <input type="text" name="username" required/> <br>
+		   Password: <input type="text" name="password" required/> <br>
+		   Ripeti password: <input type="text" name="repeatpassword" required/> <br>
+		   <input id = "registerbutton" type="button" value="registrati"/>
+		</fieldset>
+	 	</form>
+ 	</div>
+ 	<div id = "errormessage">
+ 	</div>
+ 	
 </body>
 </html>
