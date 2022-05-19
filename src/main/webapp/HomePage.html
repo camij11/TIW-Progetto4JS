@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" href="CSS/style.css">
 <script src=GestoreHomeSimo.js defer>
 	
@@ -12,18 +13,14 @@
 <title>HomePage Banca</title>
 </head>
 <body>
-	<div id="homepage" class="show">
+	<div id="elencoconti" class="show">
 		<h2>Elenco Conti</h2>
-		<p th:text=" ${NessunConto}"></p>
-
-		<form class="hide" action="#">
-			<select name="conto" size="${ListaConti}.size" multiple>
-				<option th:each=" conto: ${ListaConti}" th:value="${conto}"
-					th:label="'IDConto: '+ ${conto}"></option>
-			</select> <input id="selectionbutton" type="button"
-				value="Visualizza dettagli conto selezionato">
+		<form id = "selezionaconto" action = # >
+		<fieldset>
+			<select name="conto" id="conto"></select>
+			<input id="selectionbutton" type="button" value="Visualizza dettagli conto selezionato">
+		</fieldset>
 		</form>
-		<p th:text=" ${ErrorMsg}"></p>
 	</div>
 	<div id="infoconto" class="hide">
 		<div id="dettaglioconto">

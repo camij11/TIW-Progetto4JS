@@ -1,11 +1,58 @@
+let IDConto = null;
 
-document.getElementById("selectionbutton").addEventListener('click', (e) => {
-	var prova = document.getElementById("prova");
-	prova.textContent = "ciao";
+window.addEventListener("load", () => {
+	if (sessionStorage.getItem("username") == null) {
+		window.location.href = "index.html";
+	} else {
+		getContiUtente(sessionStorage.getItem("username"));
+	}
 });
 
+document.getElementById("selectionbutton").addEventListener('click', (e) => {
+	var form = e.target.closest("form");
+	if (form.checkValidity()) {
+		clearMessages();
+		IDConto = form.querySelector('input[name="conto"]').value;
+	} else {
+		form.reportValidity();
+	}
+});
+
+function getContiUtente() {
+	makeCall("GET", 'GetConti', null,
+		function(x) {
+			if (x.readyState == XMLHttpRequest.DONE) {
+				var message = x.responseText;
+				switch (x.status) {
+					case 200:
+						var elencoconti = JSON.parse(x.responseText);
+						var select = $("select#conto");
+						var elenco = document.getElementById("conto");
+						elenco.size = elencoconti.length;
+						for (var key in elencoconti) {
+							var conti = elencoconti[key];
+							$('<option>', {
+								value: conti,
+								text: conti,
+							}).appendTo(select);
+						}
+						break;
+					case 400: // bad request
+						document.getElementById("errormessage").textContent = message;
+						break;
+					case 401: // unauthorized
+						document.getElementById("errormessage").textContent = message;
+						break;
+					case 500: // server error
+						document.getElementById("errormessage").textContent = message;
+						break;
+				}
+			}
+		}
+	);
+}
+
 document.getElementById("showinfoconto").addEventListener('click', (e) => {
-	var IDConto = 1;
 	var data = new FormData();
 	data.append("conto", IDConto);
 	makeCall("Post", 'SelezionaConto', data,
