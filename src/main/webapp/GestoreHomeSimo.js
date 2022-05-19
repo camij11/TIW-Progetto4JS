@@ -12,7 +12,7 @@ document.getElementById("selectionbutton").addEventListener('click', (e) => {
 	var form = e.target.closest("form");
 	if (form.checkValidity()) {
 		clearMessages();
-		IDConto = form.querySelector('input[name="conto"]').value;
+		IDConto = form.querySelector('select[name="conto"]').value;
 	} else {
 		form.reportValidity();
 	}
