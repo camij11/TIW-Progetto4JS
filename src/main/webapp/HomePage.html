@@ -2,8 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="../CSS/style.css">
-<script src="prova.js" defer>
+<link rel="stylesheet" href="CSS/style.css">
+<script src=GestoreHomeSimo.js defer>
+	
+</script>
+<script src=utils.js defer>
+	
 </script>
 <title>HomePage Banca</title>
 </head>
@@ -12,11 +16,12 @@
 		<h2>Elenco Conti</h2>
 		<p th:text=" ${NessunConto}"></p>
 
-		<form class ="hide" action="#">
+		<form class="hide" action="#">
 			<select name="conto" size="${ListaConti}.size" multiple>
 				<option th:each=" conto: ${ListaConti}" th:value="${conto}"
 					th:label="'IDConto: '+ ${conto}"></option>
-			</select> <input id="selectionbutton" type="button" value="Visualizza dettagli conto selezionato">
+			</select> <input id="selectionbutton" type="button"
+				value="Visualizza dettagli conto selezionato">
 		</form>
 		<p th:text=" ${ErrorMsg}"></p>
 	</div>
@@ -31,13 +36,13 @@
 				</tr>
 				<tr>
 					<td>
-						<p th:text="${DettaglioConto.IDConto}"></p>
+						<p id="DettaglioContoIDConto"></p>
 					</td>
 					<td>
-						<p th:text="${DettaglioConto.proprietario}"></p>
+						<p id="DettaglioContoProprietario"></p>
 					</td>
 					<td>
-						<p th:text="${DettaglioConto.saldo}"></p>
+						<p id="DettaglioContoSaldo"></p>
 					</td>
 				</tr>
 			</table>
@@ -45,48 +50,30 @@
 		<div id="listatransazioni">
 			<h3>Lista delle ultime transazioni:</h3>
 			<table border="1" style="border-collapse: collapse">
-				<tr>
-					<td>IDTrasferimento</td>
-					<td>Data</td>
-					<td>Importo</td>
-					<td>Causale</td>
-					<td>IDContoOrigine</td>
-					<td>IDContoDestinazione</td>
-				</tr>
-				<tr th:each=" trasferimento: ${Trasferimenti}">
-					<td>
-						<p th:text="${trasferimento.IDTrasferimento}"></p>
-					</td>
-					<td>
-						<p th:text="${trasferimento.Data}"></p>
-					</td>
-					<td>
-						<p th:text="${trasferimento.Importo}"></p>
-					</td>
-					<td>
-						<p th:text="${trasferimento.Causale}"></p>
-					</td>
-					<td>
-						<p th:text="${trasferimento.IDContoOrigine}"></p>
-					</td>
-					<td>
-						<p th:text="${trasferimento.IDContoDestinazione}"></p>
-					</td>
-				</tr>
+				<thead>
+					<tr>
+						<td>IDTrasferimento</td>
+						<td>Data</td>
+						<td>Importo</td>
+						<td>Causale</td>
+						<td>IDContoOrigine</td>
+						<td>IDContoDestinazione</td>
+					</tr>
+				</thead>
+				<tbody id="trasferimenti">
+				</tbody>
 			</table>
 		</div>
 		<div id="formtrasferimento">
 			<h3>Vuoi ordinare un nuovo trasferimento?</h3>
 			<form action="#">
-				Username del destinatario: <input type="email"
-					name="usernameDestinatario" required /> <br> IDConto del
-				destinatario: <input type="number" name="IDContoDestinazione"
-					required /> <br> Causale: <input type="text" name="causale"
-					required /> <br> Importo: <input type="number" name="importo"
-					required /> <br> <input type="hidden" name="IDContoOrigine"
-					th:value="${DettaglioConto.IDConto}" /> <input type="button"
-					value="Invia" />
-				<p th:text=" ${errorMsg}"></p>
+				Username del destinatario: <input type="email" name="usernameDestinatario" required /> <br> 
+				IDConto del destinatario: <input type="number" name="IDContoDestinazione"required /> <br>
+				Causale: <input type="text" name="causale" required /> <br>
+				Importo: <input type="number" name="importo" required /> <br>
+				<input type="hidden" name="IDContoOrigine" value="1" /> 
+				<input id="inviatrasferimento"type="button" value="Invia" />
+				<p></p>
 			</form>
 		</div>
 	</div>
@@ -94,22 +81,14 @@
 		<h1>All gucci man</h1>
 
 		<p>Conto origine allo stato precedente:</p>
-		<p th:text=" ${ContoOriginePrima.IDConto}"></p>
-		<p th:text=" ${ContoOriginePrima.saldo}"></p>
-		<p th:text=" ${ContoOriginePrima.proprietario}"></p>
+		<div id="contoorigineprima"></div>
 		<p>Conto Destinazione allo stato precedente:</p>
-		<p th:text=" ${ContoDestinazionePrima.IDConto}"></p>
-		<p th:text=" ${ContoDestinazionePrima.saldo}"></p>
-		<p th:text=" ${ContoDestinazionePrima.proprietario}"></p>
+		<div id="contodestinazioneprima"></div>
 		<br />
 		<p>Conto origine allo stato successivo:</p>
-		<p th:text=" ${ContoOrigineDopo.IDConto}"></p>
-		<p th:text=" ${ContoOrigineDopo.saldo}"></p>
-		<p th:text=" ${ContoOrigineDopo.proprietario}"></p>
+		<div id="contooriginedopo"></div>
 		<p>Conto Destinazione allo stato successivo:</p>
-		<p th:text=" ${ContoDestinazioneDopo.IDConto}"></p>
-		<p th:text=" ${ContoDestinazioneDopo.saldo}"></p>
-		<p th:text=" ${ContoDestinazioneDopo.proprietario}"></p>
+		<div id="contodestinazionedopo"></div>
 
 	</div>
 	<div id="fallimento" class="hide">
@@ -128,5 +107,7 @@
 		<button id="showsuccesso">Tasto3</button>
 		<button id="showfallimento">Tasto4</button>
 	</div>
+	<div id="successmessage"></div>
+	<div id="errormessage"></div>
 </body>
 </html>

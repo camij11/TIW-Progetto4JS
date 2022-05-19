@@ -3,6 +3,8 @@ package it.polimi.TIW.progetto4.controller;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,10 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+import com.google.gson.Gson;
 
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
 import it.polimi.TIW.progetto4.DAO.DAO_Trasferimento;
@@ -28,7 +27,6 @@ import it.polimi.TIW.progetto4.beans.Conto;
 public class EseguiTransazione extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
-	private TemplateEngine templateEngine;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -41,11 +39,6 @@ public class EseguiTransazione extends HttpServlet {
     public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
 		ServletContext servletContext = getServletContext();
-		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
-		templateResolver.setTemplateMode(TemplateMode.HTML);
-		this.templateEngine = new TemplateEngine();
-		this.templateEngine.setTemplateResolver(templateResolver);
-		templateResolver.setSuffix(".html");
 	}
 
 	/**
@@ -61,6 +54,7 @@ public class EseguiTransazione extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("chiamata EseguiTransazione");
 		DAO_Trasferimento DAOTrasferimento = new DAO_Trasferimento(connection);
 		DAO_Conto DAOConto = new DAO_Conto(connection);
 		Conto contoOriginePrima, contoOrigineDopo, contoDestinazionePrima, contoDestinazioneDopo;
@@ -99,24 +93,22 @@ public class EseguiTransazione extends HttpServlet {
 			return;
 		}
 		
-		String percorso;
 		if(risultato == 1) {
 			ServletContext servletContext = getServletContext();
-			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			ctx.setVariable("errorMsg", "Tutto ok");
-			ctx.setVariable("ContoOriginePrima", contoOriginePrima);
-			ctx.setVariable("ContoOrigineDopo", contoOrigineDopo);
-			ctx.setVariable("ContoDestinazionePrima", contoDestinazionePrima);
-			ctx.setVariable("ContoDestinazioneDopo", contoDestinazioneDopo);
-			percorso = "/WEB-INF/Successo.html";
-			templateEngine.process(percorso, ctx, response.getWriter());
+			Collection valori = new ArrayList();
+			valori.add(contoOriginePrima);
+			valori.add(contoOrigineDopo);
+			valori.add(contoDestinazionePrima);
+			valori.add(contoDestinazioneDopo);
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.setContentType("application/json");
+		    response.setCharacterEncoding("UTF-8");
+		    String json = new Gson().toJson(valori);
+		    System.out.println(json);
+		    response.getWriter().write(json);
 		} 
 		else {
-			ServletContext servletContext = getServletContext();
-			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			ctx.setVariable("errorMsg", "Nope");
-			percorso = "/WEB-INF/Fallimento.html";
-			templateEngine.process(percorso, ctx, response.getWriter());
+			//ctx.setVariable("errorMsg", "Nope");
 		}
 	}
 

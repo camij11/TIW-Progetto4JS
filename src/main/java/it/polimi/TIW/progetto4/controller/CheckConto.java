@@ -6,16 +6,11 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-//import org.apache.commons.lang.StringEscapeUtils;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.TIW.progetto4.beans.*;
 import it.polimi.TIW.progetto4.DAO.*;
@@ -24,10 +19,10 @@ import it.polimi.TIW.progetto4.util.*;
  * Servlet implementation class CheckConto
  */
 @WebServlet("/CheckConto")
+@MultipartConfig
 public class CheckConto extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
-	private TemplateEngine templateEngine;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -39,11 +34,6 @@ public class CheckConto extends HttpServlet {
     public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
 		ServletContext servletContext = getServletContext();
-		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
-		templateResolver.setTemplateMode(TemplateMode.HTML);
-		this.templateEngine = new TemplateEngine();
-		this.templateEngine.setTemplateResolver(templateResolver);
-		templateResolver.setSuffix(".html");
 	}
 
 	/**
@@ -51,6 +41,7 @@ public class CheckConto extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		System.out.println("chiamata CheckConto");
 		String usernameDestinatario;
 		int IDContoDestinazione;
 		String causale;
@@ -111,12 +102,7 @@ public class CheckConto extends HttpServlet {
 			getServletContext().getRequestDispatcher(percorso).forward(request, response);
 		} 
 		else {
-			ServletContext servletContext = getServletContext();
-			final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-			ctx.setVariable("errorMsg", "Conto di origine o conto di destinazione inesistente oppure importo maggiore del saldo del conto d'origine");
-			ctx.setVariable("IDConto", IDContoOrigine);
-			percorso = "/WEB-INF/Fallimento.html";
-			templateEngine.process(percorso, ctx, response.getWriter());
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
 	}
 
