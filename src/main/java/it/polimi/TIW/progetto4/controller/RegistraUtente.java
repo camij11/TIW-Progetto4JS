@@ -26,7 +26,6 @@ import java.util.regex.Matcher;
 
 @WebServlet("/RegistraUtente")
 @MultipartConfig
-
 public class RegistraUtente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;       
@@ -37,7 +36,6 @@ public class RegistraUtente extends HttpServlet {
     
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
-	
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -87,19 +85,23 @@ public class RegistraUtente extends HttpServlet {
 	    try{
 	    	usernameEsistente = DaoUtente.checkUsername(name, surname, username, password);
 	    } catch (Exception e) {
-	    	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Non è stato possibile accedere alla base di dati");
+	    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Non è stato possibile accedere alla base di dati");
+			return;
 	    }
 	    if(usernameEsistente == null) {
 	    	try{
 	    		utente = DaoUtente.registraUtente(username, password, name, surname);
 			} catch (Exception e) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Non è stato possibile accedere alla base di dati");
-			};	
-	    } else {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Non è stato possibile accedere alla BD");
+				return;
+			}
+		} else {
 	    	response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.getWriter().println("Username già in uso");
 			return;
-	      }
+	    }
 	
 	
 	    if(utente!= null) {

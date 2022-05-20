@@ -19,13 +19,11 @@ import it.polimi.TIW.progetto4.DAO.DAO_Conto;
 import it.polimi.TIW.progetto4.DAO.DAO_Trasferimento;
 import it.polimi.TIW.progetto4.beans.Conto;
 import it.polimi.TIW.progetto4.beans.Trasferimento;
+import it.polimi.TIW.progetto4.beans.Utente;
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
 
 import java.util.ArrayList;
 
-/**
- * Servlet implementation class SelezionaConto
- */
 @WebServlet("/SelezionaConto")
 @MultipartConfig
 public class SelezionaConto extends HttpServlet {
@@ -38,7 +36,6 @@ public class SelezionaConto extends HttpServlet {
 
 	public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
-		ServletContext servletContext = getServletContext();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,46 +43,59 @@ public class SelezionaConto extends HttpServlet {
 		DAO_Conto DaoConto = new DAO_Conto(connection);
 		DAO_Trasferimento DaoTrasferimento = new DAO_Trasferimento(connection);
 		Conto conto;
-		try{
-			IDConto = Integer.parseInt(request.getParameter("conto"));
-		} catch(Exception e) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Nessun conto selezionato");
-			return;
-		}
-		
-		try{
-			conto = DaoConto.getContoByID(IDConto);
-		} catch(Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Impossibile selezionare conto desiderato");
-			return;
-		}
-		
-		ArrayList<Trasferimento> listaTrasferimenti = new ArrayList<>();
-		
-		try {
-			listaTrasferimenti = DaoTrasferimento.trovaTrasferimentiByIDConto(IDConto);
-		} catch(Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Impossibile accedere ai dati del conto");
-			return;
-		}
-		
-		if(conto != null) {
-			Collection risultato = new ArrayList();
-			risultato.add(conto);
-			risultato.add(listaTrasferimenti);
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.setContentType("application/json");
-		    response.setCharacterEncoding("UTF-8");
-		    String json = new Gson().toJson(risultato);
-		    response.getWriter().write(json);
-		    
-		} 
-		else {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().println("Conto inesistente");
+		Utente utente = (Utente)request.getSession().getAttribute("user");
+		if(utente!=null) {
+			try{
+				IDConto = Integer.parseInt(request.getParameter("conto"));
+			} catch(Exception e) {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Nessun conto selezionato");
+				return;
+			}
+			
+			try{
+				if(DaoConto.checkProprietà(IDConto, utente.getUsername())!= null) {
+					conto = DaoConto.getContoByID(IDConto);
+				}
+				else {
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+					response.getWriter().println("Utente in sessione non è proprietario del conto selezionato\"");
+					return;
+				}
+			} catch(Exception e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Impossibile selezionare conto desiderato");
+				return;
+			}
+			
+			ArrayList<Trasferimento> listaTrasferimenti = new ArrayList<>();
+			
+			try {
+				listaTrasferimenti = DaoTrasferimento.trovaTrasferimentiByIDConto(IDConto);
+			} catch(Exception e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Impossibile accedere ai dati del conto");
+				return;
+			}
+			
+			if(conto != null) {
+				Collection risultato = new ArrayList();
+				risultato.add(conto);
+				risultato.add(listaTrasferimenti);
+				response.setStatus(HttpServletResponse.SC_OK);
+				response.setContentType("application/json");
+			    response.setCharacterEncoding("UTF-8");
+			    String json = new Gson().toJson(risultato);
+			    response.getWriter().write(json);
+			    
+			} 
+			else {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Conto inesistente");
+			}
+		} else {
+			String percorso = "/Logout";
+			getServletContext().getRequestDispatcher(percorso).forward(request, response);
 		}
 	}
 	

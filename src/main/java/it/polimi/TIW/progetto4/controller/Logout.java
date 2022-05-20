@@ -20,21 +20,19 @@ import it.polimi.TIW.progetto4.util.ConnectionHandler;
 
 @WebServlet("/Logout")
 @MultipartConfig
-
 public class Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private Connection connessione;
 	
     public Logout() {
         super();
     }
-    
-    public void init() throws ServletException {
-		connessione = ConnectionHandler.getConnection(getServletContext());
-	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getSession().invalidate();
 		response.setStatus(HttpServletResponse.SC_OK);
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request,response);
 	}
 }

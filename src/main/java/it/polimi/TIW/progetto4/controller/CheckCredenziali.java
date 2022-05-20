@@ -46,7 +46,13 @@ public class CheckCredenziali extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("I campi username e password devono essere riempiti");
 			return;
-		 } 
+		 }
+		
+		if(password.length()>20) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("La password inserita è troppo lunga (max 20 caratteri)");
+			return;
+		}
 		
 		DAO_Utente DaoUtente = new DAO_Utente(connection);
 		Utente utente = null;
