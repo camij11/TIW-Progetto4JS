@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 <meta charset="UTF-8">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link rel="stylesheet" href="CSS/style.css">
+<!--link rel="stylesheet" href="CSS/style.css"-->
 <script src=gestioneHome.js defer>
 </script>
 <script src=utils.js defer>
@@ -61,17 +61,21 @@
 		</div>
 		<div id="formtrasferimento">
 			<h3>Vuoi ordinare un nuovo trasferimento?</h3>
-			<form action="#">
-				Username del destinatario: <input type="email" name="usernameDestinatario" required /> <br> 
+			<form autocomplete = "off" action="#">
+				Username del destinatario: <input id = "inputUsername" type="email" name="usernameDestinatario" required /> <br> 
+				<div id = "autocomplete-div">
+				<select id = "autocomplete" autocomplete="off">
+				</select>
+				</div>
 				IDConto del destinatario: <input type="number" name="IDContoDestinazione"required /> <br>
 				Causale: <input type="text" name="causale" required /> <br>
 				Importo: <input type="number" name="importo" required /> <br>
-				<input type="hidden" name="IDContoOrigine" value="1" /> 
+				<input type="hidden" name="IDContoOrigine" id="contoorigineform" />
 				<input id="inviatrasferimento"type="button" value="Invia" />
 				<p></p>
 			</form>
 		</div>
-	</div>
+		</div>
 	<div id="successo" class="hide">
 		<h1>All gucci man</h1>
 		<p>Conto origine allo stato precedente:</p>
@@ -83,10 +87,10 @@
 		<div id="contooriginedopo"></div>
 		<p>Conto Destinazione allo stato successivo:</p>
 		<div id="contodestinazionedopo"></div>
+		<button id="aggiungiinrubrica">Aggiungi in rubrica</button>
 	</div>
 	<div id="fallimento" class="hide">
 		<h2>Siamo spiacenti</h2>
-		<p th:text=" ${errorMsg}">Qualcosa è andato storto</p>
 	</div>
 	<div>
 		<button id = "logout">Logout</button>

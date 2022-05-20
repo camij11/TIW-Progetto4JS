@@ -15,30 +15,22 @@ import javax.servlet.http.HttpServletResponse;
 import it.polimi.TIW.progetto4.beans.*;
 import it.polimi.TIW.progetto4.DAO.*;
 import it.polimi.TIW.progetto4.util.*;
-/**
- * Servlet implementation class CheckConto
- */
+
 @WebServlet("/CheckConto")
 @MultipartConfig
 public class CheckConto extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+    
     public CheckConto() {
         super();
     }
     
     public void init() throws ServletException {
 		connection = ConnectionHandler.getConnection(getServletContext());
-		ServletContext servletContext = getServletContext();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		System.out.println("chiamata CheckConto");
