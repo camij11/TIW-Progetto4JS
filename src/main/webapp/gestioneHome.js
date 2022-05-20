@@ -91,10 +91,10 @@ document.getElementById("selectionbutton").addEventListener('click', (e) => {
 					}
 				}
 			}
-		) 
+		)
 	} else {
 		form.reportValidity();
-	  }
+	}
 });
 
 document.getElementById("inviatrasferimento").addEventListener('click', (e) => {
@@ -118,10 +118,10 @@ document.getElementById("inviatrasferimento").addEventListener('click', (e) => {
 								var content = JSON.parse(message);
 								document.getElementById("successo").className = "show";
 								document.getElementById("showsuccesso").textContent = "AntiTasto3";
-								document.getElementById("contoorigineprima").innerHTML ="<p>"+content[0].IDConto+"</p><p>"+content[0].saldo+"</p><p>"+content[0].proprietario+"</p>";
-								document.getElementById("contodestinazioneprima").innerHTML ="<p>"+content[2].IDConto+"</p><p>"+content[2].saldo+"</p><p>"+content[1].proprietario+"</p>";
-								document.getElementById("contooriginedopo").innerHTML ="<p>"+content[1].IDConto+"</p><p>"+content[1].saldo+"</p><p>"+content[2].proprietario+"</p>";
-								document.getElementById("contodestinazionedopo").innerHTML ="<p>"+content[3].IDConto+"</p><p>"+content[3].saldo+"</p><p>"+content[3].proprietario+"</p>";
+								document.getElementById("contoorigineprima").innerHTML = "<p>" + content[0].IDConto + "</p><p>" + content[0].saldo + "</p><p>" + content[0].proprietario + "</p>";
+								document.getElementById("contodestinazioneprima").innerHTML = "<p>" + content[2].IDConto + "</p><p>" + content[2].saldo + "</p><p>" + content[1].proprietario + "</p>";
+								document.getElementById("contooriginedopo").innerHTML = "<p>" + content[1].IDConto + "</p><p>" + content[1].saldo + "</p><p>" + content[2].proprietario + "</p>";
+								document.getElementById("contodestinazionedopo").innerHTML = "<p>" + content[3].IDConto + "</p><p>" + content[3].saldo + "</p><p>" + content[3].proprietario + "</p>";
 								break;
 							case 400: // bad request
 								document.getElementById("fallimento").className = "show";
@@ -149,44 +149,24 @@ document.getElementById("inviatrasferimento").addEventListener('click', (e) => {
 	}
 });
 
-document.getElementById("showsuccesso").addEventListener('click', (e) => {
-	if (document.getElementById("showsuccesso").textContent === "Tasto3") {
-		document.getElementById("successo").className = "show";
-		document.getElementById("showsuccesso").textContent = "AntiTasto3";
-	} else {
-		document.getElementById("successo").className = "hide";
-		document.getElementById("showsuccesso").textContent = "Tasto3";
-	}
+document.getElementById("logout").addEventListener('click', (e) => {
+	makeCall("GET", 'Logout', null, function(x) {
+		if (x.readyState == XMLHttpRequest.DONE) {
+			switch (x.status) {
+				case 200:
+					sessionStorage.clear;
+					window.location.href = "index.html";
+					break;
+				case 400: // bad request
+					document.getElementById("errormessage").textContent = message;
+					break;
+				case 401: // unauthorized
+					document.getElementById("errormessage").textContent = message;
+					break;
+				case 500: // server error
+					document.getElementById("errormessage").textContent = message;
+					break;
+			}
+		}
+	});
 });
-
-document.getElementById("showfallimento").addEventListener('click', (e) => {
-	if (document.getElementById("showfallimento").textContent === "Tasto4") {
-		document.getElementById("fallimento").className = "show";
-		document.getElementById("showfallimento").textContent = "AntiTasto4";
-	} else {
-		document.getElementById("fallimento").className = "hide";
-		document.getElementById("showfallimento").textContent = "Tasto4";
-	}
-
-});
-
-document.getElementById("showhomepage").addEventListener('click', (e) => {
-	if (document.getElementById("showhomepage").textContent === "Tasto1") {
-		document.getElementById("homepage").className = "show";
-		document.getElementById("showhomepage").textContent = "AntiTasto1";
-	} else {
-		document.getElementById("homepage").className = "hide";
-		document.getElementById("showhomepage").textContent = "Tasto1";
-	}
-});
-
-function clearMessages() {
-	document.getElementById("errormessage").innerHTML = "";
-	document.getElementById("successmessage").innerHTML = "";
-}
-
-function validateEmail(email) {
-	var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	console.log(re.test(email));
-	return re.test(email);
-}

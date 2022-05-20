@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import com.google.gson.Gson;
+
 import it.polimi.TIW.progetto4.beans.*;
 import it.polimi.TIW.progetto4.DAO.*;
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
@@ -61,7 +63,7 @@ public class CheckCredenziali extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setContentType("application/json");
 		    response.setCharacterEncoding("UTF-8");
-			response.getWriter().println(username);
+			response.getWriter().write(username);
 		} 
 		else {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

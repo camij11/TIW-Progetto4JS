@@ -37,8 +37,7 @@ public class GetConti extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Utente utenteCorr = (Utente)request.getSession().getAttribute("user");
-		System.out.println(utenteCorr.getUsername());
-		request.getSession().setMaxInactiveInterval(30);
+		// request.getSession().setMaxInactiveInterval(30);
 		DAO_Conto DaoConto = new DAO_Conto(connection);
 		List<Integer> ElencoConti;
 		if(utenteCorr!=null) {

@@ -49,14 +49,16 @@ public class SelezionaConto extends HttpServlet {
 		try{
 			IDConto = Integer.parseInt(request.getParameter("conto"));
 		} catch(Exception e) {
-			//ctx.setVariable("ErrorMsg","Nessun conto selezionato");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Nessun conto selezionato");
 			return;
 		}
 		
 		try{
 			conto = DaoConto.getContoByID(IDConto);
 		} catch(Exception e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile selezionare conto desiderato");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Impossibile selezionare conto desiderato");
 			return;
 		}
 		
@@ -65,7 +67,8 @@ public class SelezionaConto extends HttpServlet {
 		try {
 			listaTrasferimenti = DaoTrasferimento.trovaTrasferimentiByIDConto(IDConto);
 		} catch(Exception e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile accedere ai dati del conto");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Impossibile accedere ai dati del conto");
 			return;
 		}
 		
@@ -82,9 +85,8 @@ public class SelezionaConto extends HttpServlet {
 		} 
 		else {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().println("Username o password errati");
+			response.getWriter().println("Conto inesistente");
 		}
-		
 	}
 	
 	public void destroy() {

@@ -4,11 +4,9 @@
 <meta charset="UTF-8">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" href="CSS/style.css">
-<script src=GestoreHomeSimo.js defer>
-	
+<script src=gestioneHome.js defer>
 </script>
 <script src=utils.js defer>
-	
 </script>
 <title>HomePage Banca</title>
 </head>
@@ -76,7 +74,6 @@
 	</div>
 	<div id="successo" class="hide">
 		<h1>All gucci man</h1>
-
 		<p>Conto origine allo stato precedente:</p>
 		<div id="contoorigineprima"></div>
 		<p>Conto Destinazione allo stato precedente:</p>
@@ -86,23 +83,13 @@
 		<div id="contooriginedopo"></div>
 		<p>Conto Destinazione allo stato successivo:</p>
 		<div id="contodestinazionedopo"></div>
-
 	</div>
 	<div id="fallimento" class="hide">
 		<h2>Siamo spiacenti</h2>
 		<p th:text=" ${errorMsg}">Qualcosa è andato storto</p>
 	</div>
-	<div id="logout">
-		<p>
-			<a href="/RIAGruppo94/Logout">Logout</a>
-		</p>
-	</div>
-	<div id="prova"></div>
-	<div id="tastiShow" class="show">
-		<button id="showhomepage">Tasto1</button>
-		<button id="showinfoconto">Tasto2</button>
-		<button id="showsuccesso">Tasto3</button>
-		<button id="showfallimento">Tasto4</button>
+	<div>
+		<button id = "logout">Logout</button>
 	</div>
 	<div id="successmessage"></div>
 	<div id="errormessage"></div>
