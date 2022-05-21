@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<!--link rel="stylesheet" href="CSS/style.css"-->
+<!-- link rel="stylesheet" href="CSS/style.css" -->
 <script src=gestioneHome.js defer>
 </script>
 <script src=utils.js defer>
@@ -59,14 +59,11 @@
 				</tbody>
 			</table>
 		</div>
+		
 		<div id="formtrasferimento">
 			<h3>Vuoi ordinare un nuovo trasferimento?</h3>
 			<form autocomplete = "off" action="#">
-				Username del destinatario: <input id = "inputUsername" type="email" name="usernameDestinatario" required /> <br> 
-				<div id = "autocomplete-div">
-				<select id = "autocomplete" autocomplete="off">
-				</select>
-				</div>
+				Username del destinatario: <input id = "inputUsername" type="email" name="usernameDestinatario" required onKeyUp = "showResult(this.value)"/> <select id = "result"> </select> <br> 
 				IDConto del destinatario: <input type="number" name="IDContoDestinazione"required /> <br>
 				Causale: <input type="text" name="causale" required /> <br>
 				Importo: <input type="number" name="importo" required /> <br>
