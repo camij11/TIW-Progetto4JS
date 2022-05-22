@@ -61,10 +61,10 @@ public class GetConti extends HttpServlet {
 				return;
 			  }			
 		}
-		//else {
-		//	String percorso = "/Logout";
-		//	getServletContext().getRequestDispatcher(percorso).forward(request, response);
-		//}
+		else {
+			String percorso = "/Logout";
+			getServletContext().getRequestDispatcher(percorso).forward(request, response);
+		}
 		
 	}
 	

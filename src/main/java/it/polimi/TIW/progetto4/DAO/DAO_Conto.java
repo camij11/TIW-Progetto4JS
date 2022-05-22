@@ -44,25 +44,6 @@ public class DAO_Conto {
 		}
 	}
 	
-	public Conto checkSaldo(int IDConto) throws SQLException {
-		String query = "SELECT IDConto, saldo, Intestatario FROM Conto WHERE IDConto = ?";
-		try (PreparedStatement statement = connessione.prepareStatement(query);) {
-			statement.setInt(1, IDConto);
-			try (ResultSet result = statement.executeQuery();) {
-				if (result.next()) {
-					Conto conto = new Conto();
-					conto.setIDConto(result.getInt("IDconto"));
-					conto.setSaldo(result.getInt("saldo"));
-					conto.setProprietario(result.getString("Intestatario"));
-					return conto;
-				}
-				else {
-					return null;
-				}
-			}
-		}
-	}
-	
 	public List<Integer> getContiUtente(String username) throws SQLException {
 		String query = "SELECT IDConto FROM Conto WHERE Intestatario = ?";
 		List<Integer> ElencoConti = new ArrayList<>();

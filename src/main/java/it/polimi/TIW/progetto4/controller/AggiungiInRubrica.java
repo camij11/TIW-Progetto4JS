@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import it.polimi.TIW.progetto4.DAO.DAO_Conto;
 import it.polimi.TIW.progetto4.DAO.DAO_Rubrica;
+import it.polimi.TIW.progetto4.beans.Rubrica;
 import it.polimi.TIW.progetto4.beans.Utente;
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
 
@@ -48,18 +50,44 @@ public class AggiungiInRubrica extends HttpServlet {
 			response.getWriter().println("Inserire un IDConto valido");
 			return;
 		}
+		
 		if(!utenteCorr.getUsername().equals(UsernameProprietario)) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("L'usernameProprietario non coincide con quello in sessione");
 			return;
 		}
+		DAO_Conto DaoConto = new DAO_Conto(connection);
+		try {
+			if(DaoConto.checkProprietà(IDContoAssociato, UsernameAssociato) == null) {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Il conto associato non appartiene all'utente associato");
+				return;
+			}
+		} catch(SQLException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile controllare la proprietà del conto");
+			return;
+		}
 		
 		DAO_Rubrica DaoRubrica = new DAO_Rubrica(connection);
 		int esito = 0;
+		Rubrica rub = new Rubrica();
+		
 		try {
-			esito = DaoRubrica.addToRubrica(UsernameProprietario, IDContoAssociato, UsernameAssociato);
+			rub = DaoRubrica.checkRubrica(UsernameAssociato, IDContoAssociato);
 		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile aggiungere in rubrica");
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile controllare la rubrica");
+			return;
+		}
+		
+		if(rub == null) {
+			try {
+				esito = DaoRubrica.addToRubrica(UsernameProprietario, IDContoAssociato, UsernameAssociato);
+			} catch (SQLException e) {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile aggiungere in rubrica");
+				return;
+			}
+		} else {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Voce già presente in rubrica");
 			return;
 		}
 		

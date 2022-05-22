@@ -85,7 +85,7 @@ public class RegistraUtente extends HttpServlet {
 	    try{
 	    	usernameEsistente = DaoUtente.checkUsername(name, surname, username, password);
 	    } catch (Exception e) {
-	    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	    	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Non è stato possibile accedere alla base di dati");
 			return;
 	    }
@@ -93,7 +93,7 @@ public class RegistraUtente extends HttpServlet {
 	    	try{
 	    		utente = DaoUtente.registraUtente(username, password, name, surname);
 			} catch (Exception e) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				response.getWriter().println("Non è stato possibile accedere alla BD");
 				return;
 			}

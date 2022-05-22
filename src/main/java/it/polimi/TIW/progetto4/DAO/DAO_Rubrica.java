@@ -1,5 +1,6 @@
 package it.polimi.TIW.progetto4.DAO;
 
+import it.polimi.TIW.progetto4.beans.Conto;
 import it.polimi.TIW.progetto4.beans.Rubrica;
 
 import java.sql.Connection;
@@ -60,5 +61,25 @@ public class DAO_Rubrica {
 			throw e;
 		}
 		return result;
+	}
+	
+	public Rubrica checkRubrica(String UsernameAssociato, int IDContoAssociato) throws SQLException{
+		String query = "SELECT * FROM Rubrica WHERE IDContoAssociato = ? AND UsernameAssociato = ?";
+		try (PreparedStatement statement = connessione.prepareStatement(query);) {
+			statement.setString(1, UsernameAssociato);
+			statement.setInt(2, IDContoAssociato);
+			try (ResultSet result = statement.executeQuery();) {
+				if (result.next()) {
+					Rubrica rubrica = new Rubrica();
+					rubrica.setUsernameProprietario(result.getString("UsernameProprietario"));
+					rubrica.setIDContoAssociato(result.getInt("IDContoAssociato"));
+					rubrica.setUsernameAssociato(result.getString("UsernameAssociato"));
+					return rubrica;
+				}
+				else {
+					return null;
+				}
+			}
+		}
 	}
 }
