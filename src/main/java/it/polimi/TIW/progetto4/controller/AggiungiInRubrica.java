@@ -34,69 +34,77 @@ public class AggiungiInRubrica extends HttpServlet {
     }
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Utente utenteCorr = (Utente) request.getSession().getAttribute("user");
+		Utente utenteCorr = (Utente)request.getSession().getAttribute("user");
 		String UsernameProprietario = request.getParameter("UsernameProprietario");
 		int IDContoAssociato = Integer.parseInt(request.getParameter("IDContoAssociato"));
 		String UsernameAssociato = request.getParameter("UsernameAssociato");
-		
-		if(UsernameProprietario == null || UsernameAssociato == null || UsernameProprietario.isEmpty() || UsernameAssociato.isEmpty()) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("I campi usernameProprietario e usernameAssociato devono essere riempiti");
-			return;
-		}
-		
-		if(IDContoAssociato<=0) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("Inserire un IDConto valido");
-			return;
-		}
-		
-		if(!utenteCorr.getUsername().equals(UsernameProprietario)) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("L'usernameProprietario non coincide con quello in sessione");
-			return;
-		}
-		DAO_Conto DaoConto = new DAO_Conto(connection);
-		try {
-			if(DaoConto.checkProprietà(IDContoAssociato, UsernameAssociato) == null) {
+		if(utenteCorr != null) {
+			if(UsernameProprietario == null || UsernameAssociato == null || UsernameProprietario.isEmpty() || UsernameAssociato.isEmpty()) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("Il conto associato non appartiene all'utente associato");
+				response.getWriter().println("I campi usernameProprietario e usernameAssociato devono essere riempiti");
 				return;
 			}
-		} catch(SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile controllare la proprietà del conto");
-			return;
-		}
-		
-		DAO_Rubrica DaoRubrica = new DAO_Rubrica(connection);
-		int esito = 0;
-		Rubrica rub = new Rubrica();
-		
-		try {
-			rub = DaoRubrica.checkRubrica(UsernameAssociato, IDContoAssociato);
-		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile controllare la rubrica");
-			return;
-		}
-		
-		if(rub == null) {
+			
+			if(IDContoAssociato<=0) {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Inserire un IDConto valido");
+				return;
+			}
+			
+			if(!utenteCorr.getUsername().equals(UsernameProprietario)) {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("L'usernameProprietario non coincide con quello in sessione");
+				return;
+			}
+			DAO_Conto DaoConto = new DAO_Conto(connection);
 			try {
-				esito = DaoRubrica.addToRubrica(UsernameProprietario, IDContoAssociato, UsernameAssociato);
-			} catch (SQLException e) {
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile aggiungere in rubrica");
+				if(DaoConto.checkProprietà(IDContoAssociato, UsernameAssociato) == null) {
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println("Il conto associato non appartiene all'utente associato");
+					return;
+				}
+			} catch(SQLException e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Impossibile controllare la proprietà del conto");
 				return;
 			}
-		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Voce già presente in rubrica");
-			return;
-		}
-		
-		if(esito==1) {
-			response.setStatus(HttpServletResponse.SC_OK);
-	    	response.getWriter().println("Conto registrato in rubrica con successo");
+			
+			DAO_Rubrica DaoRubrica = new DAO_Rubrica(connection);
+			int esito = 0;
+			Rubrica rub = new Rubrica();
+			
+			try {
+				rub = DaoRubrica.checkRubrica(UsernameAssociato, IDContoAssociato);
+			} catch (SQLException e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Impossibile controllare la rubrica");
+				return;
+			}
+			
+			if(rub == null) {
+				try {
+					esito = DaoRubrica.addToRubrica(UsernameProprietario, IDContoAssociato, UsernameAssociato);
+				} catch (SQLException e) {
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					response.getWriter().println("Impossibile aggiungere in rubrica");
+					return;
+				}
+			} else {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Voce già presente in rubrica");
+				return;
+			}
+			
+			if(esito==1) {
+				response.setStatus(HttpServletResponse.SC_OK);
+		    	response.getWriter().println("Conto registrato in rubrica con successo");
+			}else {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		    	response.getWriter().println("Non è stato possibile aggiungere il conto in rubrica");
+			}
 		}else {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	    	response.getWriter().println("Non è stato possibile aggiungere il conto in rubrica");
+			String percorso = "/Logout";
+			getServletContext().getRequestDispatcher(percorso).forward(request, response);
 		}
 	}
 

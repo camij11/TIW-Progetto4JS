@@ -1,7 +1,5 @@
 package it.polimi.TIW.progetto4.DAO;
 import it.polimi.TIW.progetto4.beans.Conto;
-import it.polimi.TIW.progetto4.beans.Utente;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,14 +63,16 @@ public class DAO_Conto {
 		try(PreparedStatement statement = connessione.prepareStatement(query);){
 			statement.setInt(1, IDConto);
 			try(ResultSet result = statement.executeQuery();){
-				while (result.next()) {
+				if (result.next()) {
 					  conto.setIDConto(result.getInt("IDConto"));
 					  conto.setSaldo(result.getInt("Saldo"));
 					  conto.setProprietario(result.getString("Intestatario"));
+					  return conto;
+			    } else {
+			    	return null;
 			    }
 			}
 		}
-		return conto;
 	}
 	
 	public void updateConto(Conto conto) throws SQLException {

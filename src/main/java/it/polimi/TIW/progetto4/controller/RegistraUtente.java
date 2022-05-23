@@ -4,18 +4,12 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import it.polimi.TIW.progetto4.DAO.DAO_Utente;
 import it.polimi.TIW.progetto4.beans.Utente;
@@ -44,7 +38,6 @@ public class RegistraUtente extends HttpServlet {
         String username = null;
         String password = null;
         String repeatpassword = null;
-        String percorso;
 	
 		name = request.getParameter("name");
 		surname = request.getParameter("surname");
@@ -54,13 +47,13 @@ public class RegistraUtente extends HttpServlet {
 		
 		if(name == null || surname == null || username == null || password == null || repeatpassword == null || name.isEmpty() || surname.isEmpty() || username.isEmpty() || password.isEmpty() || repeatpassword.isEmpty()) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("I campi username e password devono essere riempiti");
+			response.getWriter().println("Tutti i campi devono essere riempiti");
 			return;
 	    } 
 	
 		if(password.length()>20) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("La password non può essere più lunga di 20 caratteri");
+			response.getWriter().println("La password deve essere lunga al massimo 20 caratteri");
 			return;
 		}
 
@@ -94,20 +87,18 @@ public class RegistraUtente extends HttpServlet {
 	    		utente = DaoUtente.registraUtente(username, password, name, surname);
 			} catch (Exception e) {
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				response.getWriter().println("Non è stato possibile accedere alla BD");
+				response.getWriter().println("Non è stato possibile accedere alla base di dati");
 				return;
 			}
 		} else {
 	    	response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().println("Username già in uso");
+			response.getWriter().println("Username scelto non disponibile");
 			return;
 	    }
-	
 	
 	    if(utente!= null) {
 	    	response.setStatus(HttpServletResponse.SC_OK);
 	    	response.getWriter().println("Registrazione avvenuta con successo");
-			
 		} else {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Non è stato possibile effettuare la registrazione");

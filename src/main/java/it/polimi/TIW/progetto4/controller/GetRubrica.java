@@ -36,23 +36,28 @@ public class GetRubrica extends HttpServlet {
 	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Utente utenteCorr = (Utente) request.getSession().getAttribute("user");
-		String usernameCorr = utenteCorr.getUsername();
-		DAO_Rubrica DaoRubrica = new DAO_Rubrica(connection);
-		ArrayList<Rubrica> rubriche = new ArrayList<>();
-		try{
-			rubriche = DaoRubrica.getRubricaByUsername(usernameCorr);
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Impossibile accedere alla base di dati");
-			return;
-		}
-		response.setStatus(HttpServletResponse.SC_OK);
-		if(rubriche != null) {
-			response.setContentType("application/json");
-		    response.setCharacterEncoding("UTF-8");
-		    String json = new Gson().toJson(rubriche);
-		    response.getWriter().write(json);
+		Utente utenteCorr = (Utente)request.getSession().getAttribute("user");
+		if(utenteCorr != null) {
+			String usernameCorr = utenteCorr.getUsername();
+			DAO_Rubrica DaoRubrica = new DAO_Rubrica(connection);
+			ArrayList<Rubrica> rubriche = new ArrayList<>();
+			try{
+				rubriche = DaoRubrica.getRubricaByUsername(usernameCorr);
+			} catch (Exception e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Impossibile accedere alla base di dati");
+				return;
+			}
+			response.setStatus(HttpServletResponse.SC_OK);
+			if(rubriche != null) {
+				response.setContentType("application/json");
+			    response.setCharacterEncoding("UTF-8");
+			    String json = new Gson().toJson(rubriche);
+			    response.getWriter().write(json);
+			}
+		} else {
+			String percorso = "/Logout";
+			getServletContext().getRequestDispatcher(percorso).forward(request, response);
 		}
 	}
 

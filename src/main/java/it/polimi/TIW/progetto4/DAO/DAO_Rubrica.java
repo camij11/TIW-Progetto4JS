@@ -1,6 +1,5 @@
 package it.polimi.TIW.progetto4.DAO;
 
-import it.polimi.TIW.progetto4.beans.Conto;
 import it.polimi.TIW.progetto4.beans.Rubrica;
 
 import java.sql.Connection;
@@ -48,7 +47,6 @@ public class DAO_Rubrica {
 	
 	public int addToRubrica(String UsernameProprietario, int IDContoAssociato, String UsernameAssociato) throws SQLException {
 		String query ="INSERT INTO Rubrica VALUES(?,?,?)";
-		
 		int result = 0;
 		PreparedStatement statement = null;
 		try {

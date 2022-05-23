@@ -22,45 +22,23 @@ public class DAO_Trasferimento {
 		ArrayList<Trasferimento> risultato = new ArrayList<Trasferimento>();
 		
 		String query = "SELECT * FROM Trasferimento WHERE IDContoOrigine = ? or IDContoDestinazione = ? ORDER BY Data DESC";
-		ResultSet result = null;
-		PreparedStatement statement = null;
-		try {
-			statement = connessione.prepareStatement(query);
+		try(PreparedStatement statement = connessione.prepareStatement(query);) {
 			statement.setInt(1, IDConto);
 			statement.setInt(2, IDConto);
-			result = statement.executeQuery();
+			try(ResultSet result = statement.executeQuery();){
+				while (result.next()) {
+					Trasferimento t = new Trasferimento();
+					t.setIDTrasferimento(result.getInt("IDTrasferimento"));
+					t.setData(result.getDate("Data"));
+					t.setImporto(result.getInt("Importo"));
+					t.setCausale(result.getString("Causale"));
+					t.setIDContoOrigine(result.getInt("IDContoOrigine"));
+					t.setIDContoDestinazione(result.getInt("IDContoDestinazione"));
+					risultato.add(t);
+				}
+			}
 			
-			while (result.next()) {
-				Trasferimento t = new Trasferimento();
-				t.setIDTrasferimento(result.getInt("IDTrasferimento"));
-				t.setData(result.getDate("Data"));
-				t.setImporto(result.getInt("Importo"));
-				t.setCausale(result.getString("Causale"));
-				t.setIDContoOrigine(result.getInt("IDContoOrigine"));
-				t.setIDContoDestinazione(result.getInt("IDContoDestinazione"));
-				
-				risultato.add(t);
-			}
-		} catch (SQLException e) {
-			throw e;
-
-		} finally {
-			try {
-				if (result != null) {
-					result.close();
-				}
-			} catch (SQLException e1) {
-				throw e1;
-			}
-			try {
-				if (statement != null) {
-					statement.close();
-				}
-			} catch (SQLException e2) {
-				throw e2;
-			}
-		}
-
+		} 
 		return risultato;
 	}
 	

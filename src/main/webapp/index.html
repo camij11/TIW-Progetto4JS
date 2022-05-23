@@ -2,11 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="cache-control" content="max-age=0"/>
-<meta http-equiv="cache-control" content="no-cache"/>
-<meta http-equiv="expires" content="0"/>
-<meta http-equiv="expires" content="Tue, 01 Jan 1990 12:00:00 GMT"/>
-<title>Banca TIW: accedi o registrati</title>
+<title>Banca: accedi o registrati</title>
 <script src="login.js" defer>
 </script>
 <script src="utils.js" defer>
@@ -21,12 +17,12 @@
 <div id = "successmessage">
  	</div>
     <div id = "logindiv" class ="form border">
-		<h2>Benvenuto nella pagina di login di TIW banca</h2>
+		<h2>Benvenuto! Accedi alla tua banca</h2>
 		<form id = "loginform" action = "#">
 		<fieldset>
 		   <div class="allineamentoDestra">
-		   Username: <input type="email" name="username" required/> <br>
-		   Password: <input type="password" name="password" required/> <br>
+		   Username: <input type="email" name="username" placeholder = "indirizzo email" required/> <br>
+		   Password: <input type="password" name="password" placeholder = "password" required/> <br>
 		   </div>
 		   <input id = "loginbutton"  type="button" value="accedi"/>
 		</fieldset>
@@ -35,20 +31,19 @@
  	<div id = "errormessage">
  	</div>
  	<div id = "registerdiv" class ="form border">
-		<h2>Benvenuto nella pagina di registrazione</h2>
+		<h2>Registrati se non hai un account</h2>
 		<form id = "registerform" action = "#">
 		<fieldset>
 		   <div class="allineamentoDestra">
-		   Nome: <input type="text" name="name" required/> <br>
-		   Cognome: <input type="text" name="surname" required/> <br>
-		   Username: <input type="text" name="username" required/> <br>
-		   Password: <input type="text" name="password" required/> <br>
-		   Ripeti password: <input type="text" name="repeatpassword" required/> <br>
+		   Nome: <input type="text" name="name" placeholder = "nome" required/> <br>
+		   Cognome: <input type="text" name="surname" placeholder = "cognome" required/> <br>
+		   Username: <input type="text" name="username" placeholder = "indirizzo email" required/> <br>
+		   Password: <input type="text" name="password" placeholder = "password" required/> <br>
+		   Ripeti password: <input type="text" name="repeatpassword" placeholder = "password" required/> <br>
 		   </div>
 		   <input id = "registerbutton" type="button" value="registrati"/>
 		</fieldset>
 	 	</form>
  	</div>
- 	
 </body>
 </html>

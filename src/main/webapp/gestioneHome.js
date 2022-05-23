@@ -75,6 +75,7 @@ document.getElementById("selectionbutton").addEventListener('click', (e) => {
 	var form = e.target.closest("form");
 	var IDConto = form.querySelector('select[name="conto"]').value;
 	if (form.checkValidity()) {
+		clearMessages();
 		if(!isNaN(IDConto) && IDConto > 0) {
 		makeCall("Post", 'SelezionaConto', form,
 			function(x) {
@@ -107,9 +108,6 @@ document.getElementById("selectionbutton").addEventListener('click', (e) => {
 						case 401: // unauthorized
 							document.getElementById("errormessage").textContent = message;
 							break;
-						case 404: // not found
-							document.getElementById("errormessage").textContent = message;
-							break;
 						case 500: // server error
 							document.getElementById("errormessage").textContent = message;
 							break;
@@ -132,8 +130,6 @@ document.getElementById("inviatrasferimento").addEventListener('click', (e) => {
 	var causale = form.querySelector('input[name="causale"]').value;
 	var importo = form.querySelector('input[name="importo"]').value;
 	var IDContoOrigine = form.querySelector('input[name="IDContoOrigine"]').value;
-	console.log(usernameDestinatario);
-	console.log(IDContoOrigine);
 	if (form.checkValidity()){
 		clearMessages();
 		if (validateEmail(usernameDestinatario) && IDContoOrigine != IDContoDestinazione && !isNaN(IDContoDestinazione) && IDContoOrigine != null && IDContoDestinazione != null && !isNaN(IDContoOrigine) && causale != null && importo > 0 && !isNaN(importo)) {
@@ -172,6 +168,7 @@ document.getElementById("inviatrasferimento").addEventListener('click', (e) => {
 });
 
 document.getElementById("logout").addEventListener('click', (e) => {
+	clearMessages();
 	makeCall("GET", 'Logout', null, function(x) {
 		if (x.readyState == XMLHttpRequest.DONE) {
 			switch (x.status) {
@@ -198,7 +195,6 @@ document.getElementById("aggiungiinrubrica").addEventListener('click', (e) => {
 	form.append('IDContoAssociato',document.getElementById("contoassociato").textContent);
 	form.append('UsernameProprietario',document.getElementById("usernameproprietario").textContent);
 	form.append('UsernameAssociato',document.getElementById("usernameassociato").textContent);
-	console.log(document.getElementById("usernameassociato").textContent);
 		makeCall("POST", 'AggiungiInRubrica', form, 
 		function(x) {
 			if (x.readyState == XMLHttpRequest.DONE) {

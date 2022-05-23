@@ -5,8 +5,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,8 +41,12 @@ public class EseguiTransazione extends HttpServlet {
 		try {
 			contoOriginePrima = DAOConto.getContoByID(IDContoOrigine);
 			contoDestinazionePrima = DAOConto.getContoByID(IDContoDestinazione);
+			if(contoOriginePrima == null || contoDestinazionePrima == null) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Impossibile estrarre i conti prima della transazione");
+				return;
+			}
 		} catch (SQLException e) {
-			//e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Impossibile estrarre i conti prima della transazione");
 			return;
@@ -54,25 +56,27 @@ public class EseguiTransazione extends HttpServlet {
 		try {
 			risultato = DAOTrasferimento.eseguiTransazione(IDContoOrigine, IDContoDestinazione, importo, causale); 
 		} catch(SQLException e) {
-			//e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Impossibile controllare la proprietà del conto");
+			response.getWriter().println("Impossibile eseguire la transazione");
 			return;
 		}
 		
 		try {
 			contoOrigineDopo = DAOConto.getContoByID(IDContoOrigine);
 			contoDestinazioneDopo = DAOConto.getContoByID(IDContoDestinazione);
+			if(contoOriginePrima == null || contoDestinazionePrima == null) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Impossibile estrarre i conti dopo la transazione");
+				return;
+			}
 		} catch (SQLException e) {
-			//e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Impossibile estrarre i conti dopo la transazione");
 			return;
 		}
 		
 		if(risultato == 1) {
-			ServletContext servletContext = getServletContext();
-			Collection valori = new ArrayList();
+			Collection<Object> valori = new ArrayList<>();
 			valori.add(contoOriginePrima);
 			valori.add(contoOrigineDopo);
 			valori.add(contoDestinazionePrima);
@@ -81,13 +85,20 @@ public class EseguiTransazione extends HttpServlet {
 			response.setContentType("application/json");
 		    response.setCharacterEncoding("UTF-8");
 		    String json = new Gson().toJson(valori);
-		    System.out.println(json);
 		    response.getWriter().write(json);
 		} 
 		else {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("L'esecuzione dell'operazione non è andata a buon fine");
 			return;
+		}
+	}
+	
+	public void destroy() {
+		try {
+			ConnectionHandler.closeConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

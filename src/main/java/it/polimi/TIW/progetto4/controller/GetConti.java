@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 import it.polimi.TIW.progetto4.DAO.DAO_Conto;
-import it.polimi.TIW.progetto4.beans.Conto;
 import it.polimi.TIW.progetto4.beans.Utente;
 import it.polimi.TIW.progetto4.util.ConnectionHandler;
 
@@ -37,7 +36,6 @@ public class GetConti extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Utente utenteCorr = (Utente)request.getSession().getAttribute("user");
-		// request.getSession().setMaxInactiveInterval(30);
 		DAO_Conto DaoConto = new DAO_Conto(connection);
 		List<Integer> ElencoConti;
 		if(utenteCorr!=null) {
@@ -45,7 +43,7 @@ public class GetConti extends HttpServlet {
 				ElencoConti = DaoConto.getContiUtente(utenteCorr.getUsername());
 				} catch (SQLException e) {
 					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					response.getWriter().println("Not Possible");
+					response.getWriter().println("Impossibile ottenere i conti associati all'utente loggato");
 					return;
 				}
 			if(ElencoConti.size()== 0) {

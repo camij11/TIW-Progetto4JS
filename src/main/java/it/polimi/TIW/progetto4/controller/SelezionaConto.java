@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -46,10 +45,17 @@ public class SelezionaConto extends HttpServlet {
 		Utente utente = (Utente)request.getSession().getAttribute("user");
 		if(utente!=null) {
 			try{
-				IDConto = Integer.parseInt(request.getParameter("conto"));
+				String IDContoStringa = request.getParameter("conto");
+				if(IDContoStringa == null || IDContoStringa.isEmpty()) {
+					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+					response.getWriter().println("Nessun conto selezionato");
+					return;
+				} else {
+					IDConto = Integer.parseInt(IDContoStringa);
+				}
 			} catch(Exception e) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("Nessun conto selezionato");
+				response.getWriter().println("Selezione conto fallita");
 				return;
 			}
 			
@@ -59,7 +65,7 @@ public class SelezionaConto extends HttpServlet {
 				}
 				else {
 					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-					response.getWriter().println("Utente in sessione non è proprietario del conto selezionato\"");
+					response.getWriter().println("Utente in sessione non è proprietario del conto selezionato");
 					return;
 				}
 			} catch(Exception e) {
@@ -79,7 +85,7 @@ public class SelezionaConto extends HttpServlet {
 			}
 			
 			if(conto != null) {
-				Collection risultato = new ArrayList();
+				Collection<Object> risultato = new ArrayList<>();
 				risultato.add(conto);
 				risultato.add(listaTrasferimenti);
 				response.setStatus(HttpServletResponse.SC_OK);
@@ -87,11 +93,10 @@ public class SelezionaConto extends HttpServlet {
 			    response.setCharacterEncoding("UTF-8");
 			    String json = new Gson().toJson(risultato);
 			    response.getWriter().write(json);
-			    
 			} 
 			else {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("Conto inesistente");
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().println("Impossibile selezionare il conto");
 			}
 		} else {
 			String percorso = "/Logout";

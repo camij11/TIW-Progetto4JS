@@ -1,6 +1,5 @@
 package it.polimi.TIW.progetto4.DAO;
 import it.polimi.TIW.progetto4.beans.Utente;
-import it.polimi.TIW.progetto4.DAO.DAO_Conto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -64,10 +63,16 @@ public class DAO_Utente {
 				utente.setPassword(password);
 				utente.setUsername(username);
 				try {
-					DaoConto.addContoDefault(username);
-					connessione.commit();
+					int res = DaoConto.addContoDefault(username);
+					if(res == 1) {
+						connessione.commit();
+					} else {
+						connessione.rollback();
+						utente = null;
+					}
 				} catch(SQLException e){
 					connessione.rollback();
+					utente = null;
 					throw e;
 				} finally {
 					connessione.setAutoCommit(true);
