@@ -1,5 +1,6 @@
 var rubrica = null;
 var usernameInRubrica = [];
+var stati = [];
 
 window.addEventListener("load", () => {
 	if (sessionStorage.getItem("username") == null) {
@@ -11,6 +12,7 @@ window.addEventListener("load", () => {
 });
 
 function getContiUtente() {
+	clearMessages();
 	makeCall("GET", 'GetConti', null,
 		function(x) {
 			if (x.readyState == XMLHttpRequest.DONE) {
@@ -35,6 +37,9 @@ function getContiUtente() {
 					case 401: // unauthorized
 						document.getElementById("errormessage").textContent = message;
 						break;
+					case 440:
+						logout(message);
+						break;
 					case 500: // server error
 						document.getElementById("errormessage").textContent = message;
 						break;
@@ -44,7 +49,20 @@ function getContiUtente() {
 	);
 }
 
+document.getElementById("logout").addEventListener("click", (e) => {
+	var message = "Logout effettuato";
+	logout(message);
+});
+
+function logout(message) {
+	sessionStorage.clear();
+	window.location.href = "index.html";
+	clearMessages();
+	document.getElementById("successmessage").innerHTML = message;
+}
+
 function getRubrica() {
+	clearMessages();
 	makeCall("GET", 'GetRubrica', null,
 		function(x) {
 			if (x.readyState == XMLHttpRequest.DONE) {
@@ -75,6 +93,7 @@ document.getElementById("selectionbutton").addEventListener('click', (e) => {
 	var form = e.target.closest("form");
 	var IDConto = form.querySelector('select[name="conto"]').value;
 	if (form.checkValidity()) {
+		addToHistory();
 		clearMessages();
 		if(!isNaN(IDConto) && IDConto > 0) {
 		makeCall("Post", 'SelezionaConto', form,
@@ -131,6 +150,7 @@ document.getElementById("inviatrasferimento").addEventListener('click', (e) => {
 	var importo = form.querySelector('input[name="importo"]').value;
 	var IDContoOrigine = form.querySelector('input[name="IDContoOrigine"]').value;
 	if (form.checkValidity()){
+		addToHistory();
 		clearMessages();
 		if (validateEmail(usernameDestinatario) && IDContoOrigine != IDContoDestinazione && !isNaN(IDContoDestinazione) && IDContoOrigine != null && IDContoDestinazione != null && !isNaN(IDContoOrigine) && causale != null && importo > 0 && !isNaN(importo)) {
 			makeCall("POST", 'CheckConto', form,
@@ -219,9 +239,19 @@ document.getElementById("aggiungiinrubrica").addEventListener('click', (e) => {
 });
 
 document.getElementById("goBack").addEventListener('click', (e) =>{
-	window.history.back();
+	if(stati.length == 0){
+		window.history.back();
+	} else {
+		stati.pop();
+	    document.location.reload();
+	  }
 });
- 
+
+function addToHistory() {
+	stati.push(document.querySelector("html").innerHTML);
+	console.log(stati);
+}
+
 function autocompleteMatch(input) {
   if (input == '') {
     return [];

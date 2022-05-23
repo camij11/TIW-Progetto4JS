@@ -42,7 +42,7 @@ public class DAO_Trasferimento {
 		return risultato;
 	}
 	
-	public int eseguiTransazione(int IDContoOrigine, int IDContoDestinazione, int importo, String causale) throws SQLException {
+	public int eseguiTransazione(int IDContoOrigine, int IDContoDestinazione, int importo, String causale) throws SQLException, Exception {
 		int risultato = 0;
 		String query = "INSERT INTO Trasferimento(Data, Importo, Causale, IDContoOrigine, IDContoDestinazione) VALUES(?, ?, ?, ?, ?)";
 		
@@ -57,21 +57,26 @@ public class DAO_Trasferimento {
 			statement.setString(3, causale);
 			statement.setInt(4, IDContoOrigine);
 			statement.setInt(5, IDContoDestinazione);
-			
 			risultato = statement.executeUpdate();
-			
-			Conto ContoOrigine = DAOConto.getContoByID(IDContoOrigine);
-			int importoOriginePrima = ContoOrigine.getSaldo();
-			ContoOrigine.setSaldo(importoOriginePrima - importo);
-			DAOConto.updateConto(ContoOrigine);
-			
-			Conto ContoDestinazione = DAOConto.getContoByID(IDContoDestinazione);
-			int importoDestinazioneDopo = ContoDestinazione.getSaldo();
-			ContoDestinazione.setSaldo(importoDestinazioneDopo + importo);
-			DAOConto.updateConto(ContoDestinazione);
-			
-			connessione.commit();
-			
+			if(risultato != 0) {
+				Conto ContoOrigine = DAOConto.getContoByID(IDContoOrigine);
+				int importoOriginePrima = ContoOrigine.getSaldo();
+				ContoOrigine.setSaldo(importoOriginePrima - importo);
+				if(DAOConto.updateConto(ContoOrigine)==0) {
+					connessione.rollback();
+					throw new Exception("Impossibile eseguire la transazione");
+				}
+				Conto ContoDestinazione = DAOConto.getContoByID(IDContoDestinazione);
+				int importoDestinazioneDopo = ContoDestinazione.getSaldo();
+				ContoDestinazione.setSaldo(importoDestinazioneDopo + importo);
+				if(DAOConto.updateConto(ContoDestinazione)==0) {
+					connessione.rollback();
+					throw new Exception("Impossibile eseguire la transazione");
+				}
+				connessione.commit();
+			} else {
+				throw new SQLException();
+			}
 		}catch (SQLException e1) {
 			connessione.rollback();
 			throw e1;

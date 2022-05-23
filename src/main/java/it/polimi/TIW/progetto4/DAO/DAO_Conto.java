@@ -75,7 +75,7 @@ public class DAO_Conto {
 		}
 	}
 	
-	public void updateConto(Conto conto) throws SQLException {
+	public int updateConto(Conto conto) throws SQLException {
 		String query = "UPDATE Conto SET Saldo = ? WHERE IDConto = ?";
 		int risultato = 0;
 		try(PreparedStatement statement = connessione.prepareStatement(query);){
@@ -83,7 +83,6 @@ public class DAO_Conto {
 			statement.setInt(2, conto.getIDConto());
 			risultato = statement.executeUpdate();
 		}
-		if(risultato == 1) System.out.println("UpdateConto OK");
-		else System.out.println("UpdateConto KO");
+		return risultato;
 	}
 }

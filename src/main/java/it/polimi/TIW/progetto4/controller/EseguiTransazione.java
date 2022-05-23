@@ -59,6 +59,10 @@ public class EseguiTransazione extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Impossibile eseguire la transazione");
 			return;
+		} catch(Exception e1) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Impossibile eseguire la transazione");
+			return;
 		}
 		
 		try {
@@ -70,6 +74,10 @@ public class EseguiTransazione extends HttpServlet {
 				return;
 			}
 		} catch (SQLException e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Impossibile estrarre i conti dopo la transazione");
+			return;
+		}  catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Impossibile estrarre i conti dopo la transazione");
 			return;
@@ -86,12 +94,11 @@ public class EseguiTransazione extends HttpServlet {
 		    response.setCharacterEncoding("UTF-8");
 		    String json = new Gson().toJson(valori);
 		    response.getWriter().write(json);
-		} 
-		else {
+		} else {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("L'esecuzione dell'operazione non è andata a buon fine");
 			return;
-		}
+		  }
 	}
 	
 	public void destroy() {
