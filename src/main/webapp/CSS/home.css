@@ -1,0 +1,160 @@
+@charset "UTF-8";
+
+body{
+    background-image: url("../immagini/sfondo1.jpg");
+    background-size: cover;
+    font-family: 'Raleway', sans-serif;
+}
+
+input {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.elencoConti{
+    position: absolute;
+    left: 15%;
+    vertical-align: middle;
+    width: 60%;
+}
+
+h2, h3{
+	color: #602020;
+}
+
+.form{
+    background-color: rgba(255,255,255,0.5);
+    width: 100%;
+    border: 1px solid #ffddcc;
+    border-radius: 2px;
+}
+
+.divBottone{
+    color: #331100;
+    margin-top: 3%;
+}
+
+.bottone{
+    background-color: #ffddcc;
+    color: #331100;
+    border-radius: 5px;
+    border: 2px solid white;
+    
+}
+option{
+	font-size:20px;
+	user-select:none;
+	-moz-user-select:none;
+	-webkit-tap-highlight-color:none;
+}
+option:hover{
+	background-color: #ffddcc;
+}
+option:checked{
+	background:linear-gradient(#ffddcc,#ffddcc);
+	background-color: #ffddcc !important;
+	color: #000000 !important;
+}
+
+.logout{
+	top: 5%;
+    right: 5%;
+	position: absolute;
+	background-color: #ffddcc;
+    color: #331100;
+    border-radius: 5px;
+    border: 2px solid white;
+	text-emphasis: none;
+	text-decoration: none;
+}
+
+.box {
+    margin-left: 15%;
+    width: 60%;
+    margin-top: 5%;
+    margin-bottom:5%;
+}
+
+.inbox{
+	background-color: rgba(255,255,255,0.5);
+}
+
+.newform{
+	background-color: #ffffff;
+	margin: 0 auto;
+	margin-right: 30%;
+	padding: 3mm;
+	border-radius: 10px;
+	border: 3px solid #ffbb99;
+	text-align: center;
+	width: 100%;
+}
+
+.allineamentodx{
+	vertical-align: middle;
+	text-align: right;
+	margin-right:20%;
+}
+
+.back {
+	top: 10%;
+    right: 5%;
+	position: absolute;
+	background-color: #ffddcc;
+    color: #331100;
+    border-radius: 5px;
+    border: 2px solid white;
+	text-emphasis: none;
+	text-decoration: none;
+}
+
+.esito {
+	vertical-align:center;
+	background-color: #ffffff;
+	margin: 0 auto;
+	padding: 2mm;
+	border-radius: 10px;
+	border: 2px solid #ffbb99;
+	text-align: center;
+	margin-top: 5%;
+	margin-left: 50%;
+	transform:translate(-50%,0);
+	overflow:hidden;
+}
+
+.gotohome{
+	top: 15%;
+    right: 5%;
+	position: absolute;
+	background-color: #ffddcc;
+    color: #331100;
+    border-radius: 5px;
+    border: 2px solid white;
+	text-emphasis: none;
+	text-decoration: none;
+}
+
+#succ{
+	width: 50%;
+	float:right;
+}
+
+#pre{
+	width: 50%;
+	float:left;
+}
+
+#aggiungiinrubrica{
+	background-color: #ffddcc;
+    color: #331100;
+    border-radius: 5px;
+    border: 2px solid white;
+	text-emphasis: none;
+	text-decoration: none;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}

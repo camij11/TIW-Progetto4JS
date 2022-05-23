@@ -25,7 +25,7 @@ function getContiUtente() {
 							var conti = elencoconti[key];
 							$('<option>', {
 								value: conti,
-								text: conti,
+								text: 'IDConto: '+conti,
 							}).appendTo(select);
 						}
 						break;
@@ -98,6 +98,8 @@ document.getElementById("selectionbutton").addEventListener('click', (e) => {
 								var IDContoDestinazione = content[1][i].IDContoDestinazione;
 								tBody.innerHTML += " <tr><td>" + IDT + "</td><td>" + Data + "</td><td>" + Importo + "</td><td>" + Causale + "</td><td>" + IDContoOrigine + "</td><td>" + IDContoDestinazione + "</td></tr>";
 							}
+							document.getElementById("infoconto").className = "show";
+							document.getElementById("elencoconti").className = "hide elencoConti";
 							break;
 						case 400: // bad request
 							document.getElementById("errormessage").textContent = message;
@@ -142,29 +144,27 @@ document.getElementById("inviatrasferimento").addEventListener('click', (e) => {
 						switch (x.status) {
 							case 200:
 								var content = JSON.parse(message);
-								document.getElementById("successo").className = "show";
+								document.getElementById("infoconto").className = "hide";
+								document.getElementById("successo").className = "esito show";
 								document.getElementById("contoorigineprima").innerHTML = '<p>' + content[0].IDConto + '</p><p>' + content[0].saldo + '</p><p id = "usernameproprietario" >' + content[0].proprietario + '</p>';
 								document.getElementById("contodestinazioneprima").innerHTML = '<p id = "contoassociato" >' + content[2].IDConto + '</p><p>' + content[2].saldo + '</p><p id = "usernameassociato">' + content[2].proprietario + '</p>';
 								document.getElementById("contooriginedopo").innerHTML = "<p>" + content[1].IDConto + "</p><p>" + content[1].saldo + "</p><p>" + content[1].proprietario + "</p>";
 								document.getElementById("contodestinazionedopo").innerHTML = "<p>" + content[3].IDConto + "</p><p>" + content[3].saldo + "</p><p>" + content[3].proprietario + "</p>";
 								break;
 							case 400: // bad request
-								document.getElementById("fallimento").className = "show";
-								document.getElementById("errormessage").textContent = message;
+								window.alert(message);
 								break;
 							case 401: // unauthorized
-								document.getElementById("fallimento").className = "show";
-								document.getElementById("errormessage").textContent = message;
+								window.alert(message);
 								break;
 							case 500: // server error
-								document.getElementById("fallimento").className = "show";
-								document.getElementById("errormessage").textContent = message;
+								window.alert(message);
 								break;
 						}
 					}
 				});
 		} else {
-			document.getElementById("errormessage").textContent = "campi errati";
+			window.alert("campi errati");
 		}
 	} else {
 		form.reportValidity();
@@ -220,6 +220,10 @@ document.getElementById("aggiungiinrubrica").addEventListener('click', (e) => {
 			}
 		}
 	);	
+});
+
+document.getElementById("goBack").addEventListener('click', (e) =>{
+	window.history.back();
 });
  
 function autocompleteMatch(input) {
